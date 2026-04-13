@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>NETFLIX PREMIUM - Trải nghiệm điện ảnh đỉnh cao | 20k/tuần</title>
+  <meta name="description" content="Mua tài khoản Netflix Premium 4K Ultra HD chỉ 20.000đ/tuần. Hỗ trợ Mobile, PC và Smart TV. Thanh toán qua MBBank, nhận link tức thì."/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="css/shared.css" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "inverse-on-surface": "#303030",
+            "on-primary": "#690003",
+            "outline-variant": "#5e3f3b",
+            "on-secondary-container": "#ff9f93",
+            "on-primary-container": "#fff7f6",
+            "surface-dim": "#131313",
+            "on-surface": "#e2e2e2",
+            "background": "#131313",
+            "outline": "#af8782",
+            "surface-container-low": "#1b1b1b",
+            "tertiary": "#a7c8ff",
+            "surface-container-high": "#2a2a2a",
+            "secondary": "#ffb4aa",
+            "surface-container-highest": "#353535",
+            "surface-container-lowest": "#0e0e0e",
+            "surface-variant": "#353535",
+            "tertiary-container": "#0072d7",
+            "surface-tint": "#ffb4aa",
+            "on-background": "#e2e2e2",
+            "surface-container": "#1f1f1f",
+            "surface": "#131313",
+            "inverse-surface": "#e2e2e2",
+            "primary-container": "#e50914",
+            "error-container": "#93000a",
+            "secondary-container": "#921512",
+            "on-surface-variant": "#e9bcb6",
+            "inverse-primary": "#c0000c",
+            "surface-bright": "#393939",
+            "on-tertiary-container": "#f8f9ff",
+            "error": "#ffb4ab",
+            "primary": "#ffb4aa",
+            "on-primary-fixed-variant": "#930007"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          fontFamily: {
+            headline: ["Manrope"],
+            body: ["Inter"],
+            label: ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #131313; font-family: 'Inter', sans-serif; }
+    .font-manrope { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    .fill-1 { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    .glass-header { background: rgba(19, 19, 19, 0.7); backdrop-filter: blur(20px); }
+    .hero-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(19,19,19,1) 100%); }
+    .glow-red { box-shadow: 0 0 60px rgba(229, 9, 20, 0.15); }
+  </style>
+</head>
+<body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 glass-header" id="main-nav">
+  <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto relative">
+    <a href="home.html" class="text-2xl font-black text-red-600 tracking-tighter font-manrope z-10">NETFLIX PREMIUM</a>
+    <div class="hidden md:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
+      <a class="text-red-600 font-bold border-b-2 border-red-600 pb-1 font-manrope text-sm tracking-tight" href="home.html">Trang chủ</a>
+      <a class="text-zinc-400 hover:text-zinc-100 transition-colors font-manrope text-sm tracking-tight" href="khieu-nai.html">Khiếu nại</a>
+      <a class="text-zinc-400 hover:text-zinc-100 transition-colors font-manrope text-sm tracking-tight" href="history.html">Lịch sử</a>
+    </div>
+    <div class="flex items-center gap-4 z-10">
+      <div id="nav-auth"></div>
+      <!-- Mobile hamburger -->
+      <button class="md:hidden text-zinc-400 hover:text-zinc-100" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu">
+  <button onclick="this.parentElement.classList.remove('open')" class="absolute top-4 right-4 text-zinc-400 hover:text-white">
+    <span class="material-symbols-outlined text-3xl">close</span>
+  </button>
+  <a href="home.html" class="text-red-600">Trang chủ</a>
+  <a href="khieu-nai.html">Khiếu nại</a>
+  <a href="history.html">Lịch sử</a>
+  <div id="mobile-auth"></div>
+</div>
+
+<main class="pt-16">
+
+  <!-- Hero Section -->
+  <section class="relative h-[500px] md:h-[580px] flex items-center justify-center">
+    <div class="absolute inset-0 z-0 overflow-hidden">
+      <img alt="Cinematic background" class="w-full h-full object-cover scale-110 blur-[4px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdC_v5WitE6Xj41WIwOp1VB7UeENlQTwLicYXpWBLRDJW-rUHa86EZdDDnOx3Q0aZbdRv_1k2j2D9YS-rlZE3aUUVPMZEdrZNmIvLSCbFNaQFBXeDe8GfzNNf0Z73vtZN7F5alRnEjuBw9joNUOS1R3Hns5mOjatdDDZm3M-WDaet3iJKBs7rTSHuFJeIh0NblRUuHhsQtwG3b2fJreQmKo4fjyc10GxONQ1Y5m9Enr0TjzZ-Z3uMEcjNGIH675JDnSprQ2hh4-eC"/>
+      <div class="absolute inset-0 hero-gradient"></div>
+    </div>
+    <div class="relative z-10 w-full text-center px-4 max-w-4xl mx-auto page-enter">
+      <span class="inline-block bg-primary-container/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-6 font-manrope uppercase">Ưu đãi giới hạn</span>
+      <h1 class="text-5xl md:text-8xl font-black font-manrope tracking-tighter mb-6 leading-[0.9]">
+        Netflix Premium<br/>
+        <span class="text-primary">chỉ 20k/tuần</span>
+      </h1>
+      <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-10 font-body leading-relaxed">
+        Trải nghiệm chất lượng 4K Ultra HD đỉnh cao. Xem không giới hạn trên mọi thiết bị từ điện thoại đến Smart TV.
+      </p>
+      <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+        <a class="w-full md:w-auto px-8 py-4 bg-primary-container text-on-primary-container rounded-lg font-bold text-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 pulse-glow" href="#pricing">
+          <span>Mua ngay</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+        <a href="khieu-nai.html" class="w-full md:w-auto px-8 py-4 bg-surface-container-highest/50 backdrop-blur-md border border-outline-variant/20 rounded-lg font-bold text-lg hover:bg-surface-container-highest transition-all text-center">
+          Hỗ trợ & Khiếu nại
+        </a>
+      </div>
+    </div>
+    <div class="absolute -bottom-12 w-full flex justify-center z-20 pointer-events-none">
+      <a href="#pricing" class="animate-bounce opacity-50 hover:opacity-100 transition-opacity cursor-pointer pointer-events-auto p-4 inline-block">
+        <span class="material-symbols-outlined text-4xl">expand_more</span>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- Pricing Section: 2 Packages -->
+  <section class="py-24 px-6 bg-surface" id="pricing">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="inline-block bg-primary-container/10 text-primary-container px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-4 uppercase">Bảng giá</span>
+        <h2 class="text-4xl md:text-5xl font-black font-manrope tracking-tighter mb-4">
+          Chọn gói <span class="text-primary">phù hợp</span> với bạn
+        </h2>
+        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">
+          Cùng giá 20k/tuần — chỉ khác cách đăng nhập. Chọn thiết bị bạn muốn xem Netflix.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <!-- Package 1: Mobile/PC -->
+        <div class="package-card group" id="pkg-mobile" onclick="HomeApp.selectPackage('mobile')">
+          <div class="absolute top-4 right-4">
+            <span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">PHỔ BIẾN</span>
+          </div>
+          <div class="mb-6">
+            <div class="w-16 h-16 rounded-2xl bg-primary-container/10 flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-primary-container text-3xl">smartphone</span>
+            </div>
+            <h3 class="text-2xl font-black font-manrope tracking-tight mb-1">Gói Mobile / PC</h3>
+            <p class="text-sm text-on-surface-variant">Xem trên điện thoại, máy tính, tablet</p>
+          </div>
+          <div class="flex items-baseline gap-1 mb-6">
+            <span class="text-5xl font-black font-manrope">20k</span>
+            <span class="text-on-surface-variant">/tuần</span>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>Nhận <strong>link đăng nhập tức thì</strong></span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>Bấm link → Vào Netflix ngay</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>Tự động đổi link khi hết hạn</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>4K Ultra HD + HDR</span>
+            </li>
+          </ul>
+          <button id="btn-buy-mobile" style="position:relative;z-index:10" class="w-full py-4 bg-primary-container text-on-primary-container rounded-xl font-black text-base active:scale-[0.98] transition-all shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2"
+            onclick="event.stopPropagation(); HomeApp.buyPackage('mobile')">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            Mua ngay
+          </button>
+        </div>
+
+        <!-- Package 2: TV -->
+        <div class="package-card group" id="pkg-tv" onclick="HomeApp.selectPackage('tv')">
+          <div class="absolute top-4 right-4">
+            <span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">SMART TV</span>
+          </div>
+          <div class="mb-6">
+            <div class="w-16 h-16 rounded-2xl bg-tertiary-container/10 flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-tertiary-container text-3xl">tv</span>
+            </div>
+            <h3 class="text-2xl font-black font-manrope tracking-tight mb-1">Gói TV</h3>
+            <p class="text-sm text-on-surface-variant">Xem trên Smart TV, Android Box, Fire Stick</p>
+          </div>
+          <div class="flex items-baseline gap-1 mb-6">
+            <span class="text-5xl font-black font-manrope">20k</span>
+            <span class="text-on-surface-variant">/tuần</span>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>Nhập <strong>mã code từ TV</strong> để đăng nhập</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>Hỗ trợ tất cả Smart TV</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>Đăng nhập lại miễn phí (3 lần/24h)</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <span class="material-symbols-outlined text-green-400 text-lg fill-1">check_circle</span>
+              <span>4K Ultra HD + HDR</span>
+            </li>
+          </ul>
+          <button id="btn-buy-tv" style="position:relative;z-index:10" class="w-full py-4 bg-tertiary-container text-on-tertiary-container rounded-xl font-black text-base active:scale-[0.98] transition-all shadow-lg shadow-tertiary-container/20 flex items-center justify-center gap-2"
+            onclick="event.stopPropagation(); HomeApp.buyPackage('tv')">
+            <span class="material-symbols-outlined">tv</span>
+            Mua ngay
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-24 px-6 bg-surface-container-lowest/50">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-black font-manrope tracking-tighter mb-4">Cách mua <span class="text-primary">đơn giản</span></h2>
+        <p class="text-on-surface-variant">Chỉ 3 bước — hoàn thành trong 2 phút</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-black font-manrope mb-6">1</div>
+          <h4 class="font-bold text-lg mb-2 font-manrope">Chọn gói</h4>
+          <p class="text-sm text-on-surface-variant">Mobile/PC hoặc TV — cùng giá 20k/tuần</p>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-black font-manrope mb-6">2</div>
+          <h4 class="font-bold text-lg mb-2 font-manrope">Thanh toán</h4>
+          <p class="text-sm text-on-surface-variant">Quét QR MBBank, chuyển 20k đúng nội dung</p>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-black font-manrope mb-6">3</div>
+          <h4 class="font-bold text-lg mb-2 font-manrope">Nhận tài khoản</h4>
+          <p class="text-sm text-on-surface-variant">Link đăng nhập (Mobile/PC) hoặc nhập mã TV tức thì</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Movie Posters -->
+  <section class="pb-24 px-6">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="flex justify-between items-end">
+        <div>
+          <h3 class="text-3xl font-black font-manrope tracking-tight">Sẵn sàng để xem?</h3>
+          <p class="text-on-surface-variant">Cập nhật những bộ phim mới nhất mỗi ngày</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div class="relative aspect-[2/3] rounded-lg overflow-hidden group cursor-pointer">
+          <img alt="Movie poster" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgxaUQRJBYrEPxoaxFiUC9rgOaoguc2VaGG_V-C4udCzCu4oXbemOM-OQXRm2zg_w_EgTGj3DruN_Hi2bEqZVSxoQPdkLEYEPI36GrXUXacyZz2vBUYphfy2VGMgB9SHtQkXOpOqeuw0wxw3C2Ra3Wn7rbksbDY2g4DZG0espX6FtDXjezvIqZRf3UuviguadlucWPgqgJ5JgPAGqUpVdKNbWBwScxxvNo6J7yZg0QUEoIX7ibMEBDNKhdKooTa7vwKVHSlfC04x1F"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+          <div class="absolute bottom-4 left-4"><span class="text-[10px] font-black bg-red-600 px-2 py-0.5 rounded-sm">TOP 10</span></div>
+        </div>
+        <div class="relative aspect-[2/3] rounded-lg overflow-hidden group cursor-pointer">
+          <img alt="Movie poster" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTsD56ouQJ0JnGWD1OZ5kP_Z80tCxV1P9xZ6qipCGyO-LK7kwTWtEwDqMCcTZfHVQWU3qwNv4kZJ37hZC23U3TH-TBGh4EPNBMaeEoKIZXzt6znKIJE7qko7MtI-KjL2e-BE_Rol3Il0C8U-KkPKzI9XEi1GmI3VU9W5DJcOVNp2jw8D1Wx7oGKZqO9tQ4UEYqbdXqHTjlncKFXlOyc3SzDRbQHb421fzRd7Kr_be_fcvR6Z2X9hQUQz_4isMDzbTxgSmO5WnPdKwd"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+        </div>
+        <div class="relative aspect-[2/3] rounded-lg overflow-hidden group cursor-pointer">
+          <img alt="Movie poster" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD4TxI395GFNgER1jiKdb0BpMldth9viXldNKvH1i-vnCcW20ktGf_W_XKJDtkGTj2cCxSLHyJypZxMf3NvaMkdIQF0PVjnKVD119kPJ6dAHcFk7vTHai8B_HcWgIukMj77BhUur6j6rdPbQ-KKIgT6jOAsR7A69u5dslfuU_D9nd5z5lImOvTkqaz9IH9VV6pprhA4FB8JN3cOYp29o058u5Ys6_17uhtPOrifr58g0cceSgtT7s_E3dFadTTFF9NME74inVfk-I-"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+        </div>
+        <div class="relative aspect-[2/3] rounded-lg overflow-hidden group cursor-pointer hidden md:block">
+          <img alt="Movie poster" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW7EveGgOgLJByVdL-GWS5FbtCR9w2KVLHT2-m2OnrD507Dv612acIcKK4BdkyOuNIyDyrBYWAF9g9nKHSlO9Hs73iNhcmmvZ-r7o2wOtukuPdnd05tNRUnvk8sFKcIkugQqHo_YSG5OZ8-k1xAofdkVZ5nY5g_7g0XSO2oeo16OIH74fPOussCNXDGW7eFf7lhRivtosuGIgzTTGjpk0bAkj3V-gXptkC6Mi6OTnN0Qnu4_cW-8rkeE8u2Qrrs6rB3bDRRSuOcfYM"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+        </div>
+        <div class="relative aspect-[2/3] rounded-lg overflow-hidden group cursor-pointer hidden lg:block">
+          <img alt="Movie poster" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-_g961DV8MHa6RI05v31-Z4lkMzZl25tVPCBYCPGlnO2djZArc-qriKGk7EbcfVIUKxQnOJc3LyWLvSGNihXWD8kk443HxPONGudmv4pB9ukiFk6QX_qqUfku0KCoHruyIOnu1ZplgvLT2G_PyszZCE3ARZP12-LBdkc8boFJ-h7om02u_iJbnXGdnU9uHdjHc0KuqZbH4EGU3dP1DJ23Y713P2AWRvzZd7KjJzUHlmTpQpLT84QeKV5bdrbF6kHdx1FobcFyFnan"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 px-6 bg-surface-container-low/30 border-t border-outline-variant/5">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl font-black font-manrope tracking-tighter text-center mb-12">Câu hỏi thường gặp</h2>
+      <div class="space-y-4" id="faq-list">
+        <div class="bg-surface-container rounded-xl overflow-hidden">
+          <button class="w-full text-left p-5 flex justify-between items-center font-bold text-sm hover:bg-surface-container-high/30 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').textContent = this.nextElementSibling.classList.contains('hidden') ? 'expand_more' : 'expand_less'">
+            <span>Link đăng nhập hoạt động như thế nào?</span>
+            <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
+          </button>
+          <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
+            Sau khi thanh toán, hệ thống tự động lấy một tài khoản Netflix Premium từ kho. Bạn nhận được link đặc biệt — bấm vào là vào Netflix ngay không cần nhập mật khẩu. Link có hiệu lực 7 ngày, nếu hết hạn thì vào trang Khiếu nại để nhận link mới miễn phí.
+          </div>
+        </div>
+        <div class="bg-surface-container rounded-xl overflow-hidden">
+          <button class="w-full text-left p-5 flex justify-between items-center font-bold text-sm hover:bg-surface-container-high/30 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').textContent = this.nextElementSibling.classList.contains('hidden') ? 'expand_more' : 'expand_less'">
+            <span>Gói TV khác gì gói Mobile/PC?</span>
+            <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
+          </button>
+          <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
+            Gói TV yêu cầu bạn nhập mã 8 ký tự hiển thị trên màn hình Smart TV vào hệ thống. Sau đó TV tự động đăng nhập Netflix. Gói Mobile/PC thì bạn nhận link bấm vào là xem được ngay.
+          </div>
+        </div>
+        <div class="bg-surface-container rounded-xl overflow-hidden">
+          <button class="w-full text-left p-5 flex justify-between items-center font-bold text-sm hover:bg-surface-container-high/30 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').textContent = this.nextElementSibling.classList.contains('hidden') ? 'expand_more' : 'expand_less'">
+            <span>Nếu link bị lỗi thì sao?</span>
+            <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
+          </button>
+          <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
+            Vào trang <strong>Khiếu nại</strong>, nhập mã đơn hàng — hệ thống tự động kiểm tra và cấp link/mã mới trong 30 giây. Mỗi đơn được đổi tối đa 3 lần trong 24 giờ.
+          </div>
+        </div>
+        <div class="bg-surface-container rounded-xl overflow-hidden">
+          <button class="w-full text-left p-5 flex justify-between items-center font-bold text-sm hover:bg-surface-container-high/30 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').textContent = this.nextElementSibling.classList.contains('hidden') ? 'expand_more' : 'expand_less'">
+            <span>Thanh toán bằng cách nào?</span>
+            <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
+          </button>
+          <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
+            Chuyển khoản ngân hàng MBBank qua mã QR. Chuyển đúng số tiền (20.000đ) và đúng nội dung để hệ thống xử lý nhanh nhất.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="w-full border-t border-zinc-900 bg-black">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 py-12 space-y-4 md:space-y-0 max-w-7xl mx-auto">
+    <div class="text-lg font-black text-red-600 font-manrope">NETFLIX PREMIUM</div>
+    <div class="flex flex-wrap justify-center gap-6 font-inter text-xs leading-relaxed text-zinc-500 uppercase tracking-widest">
+      <a class="hover:text-red-400 transition-colors" href="khieu-nai.html">Khiếu nại</a>
+      <a class="hover:text-red-400 transition-colors" href="history.html">Lịch sử</a>
+      <a class="hover:text-red-400 transition-colors" href="#">Điều khoản</a>
+      <a class="hover:text-red-400 transition-colors" href="#">Hướng dẫn</a>
+    </div>
+    <div class="font-inter text-xs leading-relaxed text-zinc-500">
+      © 2024 Netflix Premium. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- Payment Modal -->
+<div id="payment-modal" class="modal-overlay hidden">
+  <div class="modal-content" id="payment-modal-content">
+    <!-- Content injected by Payment.js -->
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/db.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/autocheck.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/payment.js"></script>
+<script>
+  const HomeApp = {
+    selectPackage(type) {
+      document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById(`pkg-${type}`)?.classList.add('selected');
+    },
+
+    async buyPackage(type) {
+      Auth.requireLogin(async () => {
+        console.log('[HomeApp] buyPackage called, type:', type);
+        try {
+          const result = await Payment.startPayment(type);
+          console.log('[HomeApp] Payment started OK, order:', result?.id);
+        } catch (err) {
+          console.error('[HomeApp] buyPackage ERROR:', err);
+          Utils.toast(err.message, 'error');
+        }
+      });
+    }
+  };
+
+  // Init auth
+  Auth.init();
+
+  // Close modal on backdrop click
+  document.getElementById('payment-modal')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) Utils.hideModal('payment-modal');
+  });
+
+  // Fallback: attach click handlers via JS in case inline onclick doesn't fire
+  document.getElementById('btn-buy-mobile')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    console.log('[Fallback] Mobile buy button clicked');
+    HomeApp.buyPackage('mobile');
+  });
+  document.getElementById('btn-buy-tv')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    console.log('[Fallback] TV buy button clicked');
+    HomeApp.buyPackage('tv');
+  });
+</script>
+</body>
+</html>
