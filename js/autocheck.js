@@ -30,7 +30,6 @@ const AutoCheck = {
     this._onError = onError || null;
     this._abortController = new AbortController();
 
-    console.log(`[AutoCheck] Started polling for order ${order.id}, ref: ${order.paymentRef}`);
 
     // Initial check after 3 seconds (give time for QR to display)
     setTimeout(() => {
@@ -54,7 +53,6 @@ const AutoCheck = {
 
     // Check max attempts
     if (this._pollCount > CONFIG.AUTOCHECK.MAX_POLL_ATTEMPTS) {
-      console.log('[AutoCheck] Max attempts reached, stopping');
       this.stopPolling();
       if (this._onTimeout) {
         this._onTimeout(this._currentOrder);
@@ -67,8 +65,7 @@ const AutoCheck = {
 
       if (result.paid) {
         // Payment detected!
-        this._isProcessing = true; // Prevent race condition
-        console.log('[AutoCheck] ✅ Payment detected!', result);
+        this._isProcessing = true;
 
         // Save references BEFORE stopPolling() which nulls _currentOrder
         const detectedOrder = this._currentOrder;
@@ -83,7 +80,6 @@ const AutoCheck = {
     } catch (err) {
       // Don't stop on individual errors — just log and continue
       if (err.name === 'AbortError') return; // Expected when stopping
-      console.warn(`[AutoCheck] Check #${this._pollCount} error:`, err.message);
 
       if (this._onError) {
         this._onError(err);
@@ -124,7 +120,6 @@ const AutoCheck = {
     this._currentOrder = null;
     this._pollCount = 0;
     this._isProcessing = false;
-    console.log('[AutoCheck] Polling stopped');
   },
 
   // ── Status helpers ────────────────────────

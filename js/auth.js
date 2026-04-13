@@ -69,7 +69,7 @@ const Auth = {
       return { ok: false, error: 'Vui lòng nhập tên đăng nhập và mật khẩu' };
     }
 
-    const user = await Supabase.getOne('users', 'username', username);
+    const user = await Supabase.getOne('users', 'username', username, 'username,password');
     if (!user) {
       return { ok: false, error: 'Tài khoản không tồn tại' };
     }
@@ -115,7 +115,7 @@ const Auth = {
     }
 
     try {
-      const user = await Supabase.getOne('users', 'username', username);
+      const user = await Supabase.getOne('users_public', 'username', username);
       if (!user) {
         localStorage.removeItem(CONFIG.STORAGE_KEYS.CURRENT_USER);
         return null;

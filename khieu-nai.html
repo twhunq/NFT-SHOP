@@ -367,7 +367,6 @@ const SupportApp = {
         }
 
         if (matchedCookie) {
-          console.log('[Support] Found matching cookie:', matchedCookie.id, 'sold:', matchedCookie.sold, 'usage:', matchedCookie.usage_count);
           // Cookie exists and is not sold (sold=false means still available)
           if (!matchedCookie.sold && matchedCookie.login_link) {
             existingStillValid = true;
@@ -381,7 +380,6 @@ const SupportApp = {
             }
           }
         } else {
-          console.log('[Support] No matching cookie found in list for order', orderId);
         }
       } catch (listErr) {
         console.warn('[Support] List check failed:', listErr.message);
@@ -389,7 +387,6 @@ const SupportApp = {
         // Don't replace — just show the existing link with a warning
         if (order.loginLink) {
           existingStillValid = true; // Assume still valid if we can't verify
-          console.log('[Support] Cannot verify, assuming existing link is still valid');
         }
       }
 

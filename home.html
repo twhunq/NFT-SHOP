@@ -389,10 +389,8 @@
 
     async buyPackage(type) {
       Auth.requireLogin(async () => {
-        console.log('[HomeApp] buyPackage called, type:', type);
         try {
           const result = await Payment.startPayment(type);
-          console.log('[HomeApp] Payment started OK, order:', result?.id);
         } catch (err) {
           console.error('[HomeApp] buyPackage ERROR:', err);
           Utils.toast(err.message, 'error');
@@ -412,12 +410,10 @@
   // Fallback: attach click handlers via JS in case inline onclick doesn't fire
   document.getElementById('btn-buy-mobile')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    console.log('[Fallback] Mobile buy button clicked');
     HomeApp.buyPackage('mobile');
   });
   document.getElementById('btn-buy-tv')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    console.log('[Fallback] TV buy button clicked');
     HomeApp.buyPackage('tv');
   });
 </script>

@@ -54,7 +54,7 @@ const CONFIG = {
   },
 
   // Admin
-  ADMIN_PASSWORD: 'admin2024',
+  ADMIN_PASSWORD_HASH: 'b8b8eb83374c0bf3b1c3224159f6119dbfff1b7ed6dfecdd80d4e8a895790a34',  // SHA-256 of admin password
 
   // Order
   ORDER_PREFIX: 'NFLX',

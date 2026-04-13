@@ -231,8 +231,32 @@ const Payment = {
       const order = await DB.getOrder(orderId);
       if (!order) throw new Error('Không tìm thấy đơn hàng');
 
-      // Mark as paid
-      await DB.updateOrder(orderId, { status: 'paid', paidAt: new Date().toISOString() });
+      // ── Verify payment via MB Bank API before delivering ──
+      const verifyRes = await fetch(`${CONFIG.API_BASE}${CONFIG.ENDPOINTS.MBBANK_CHECK}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          invoiceCode: order.paymentRef,
+          amount: order.amount,
+          content: order.paymentRef,
+        }),
+      });
+
+      if (verifyRes.ok) {
+        const result = await verifyRes.json();
+        if (!result.paid) {
+          throw new Error('Hệ thống chưa tìm thấy giao dịch. Vui lòng đợi 1-2 phút sau khi chuyển khoản rồi thử lại.');
+        }
+        // Payment verified — proceed
+        await DB.updateOrder(orderId, {
+          status: 'paid',
+          paidAt: new Date().toISOString(),
+          transactionId: result.transactionId || '',
+          transactionDate: result.transactionDate || '',
+        });
+      } else {
+        throw new Error('Không thể xác minh thanh toán. Vui lòng thử lại sau.');
+      }
 
       if (order.type === 'mobile') {
         await this._deliverMobileLink(orderId);
