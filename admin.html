@@ -173,6 +173,13 @@
 <script>
 const AdminApp = {
   async authenticate() {
+    // ── Kiểm tra username trước ──
+    const currentUsername = Auth.getUsername();
+    if (!currentUsername || currentUsername !== CONFIG.ADMIN_USERNAME) {
+      Utils.toast('Bạn không có quyền truy cập trang này', 'error');
+      return;
+    }
+
     const pw = document.getElementById('admin-password').value;
     const hash = await Auth._hash(pw);
     if (hash === CONFIG.ADMIN_PASSWORD_HASH) {
@@ -191,10 +198,16 @@ const AdminApp = {
   },
 
   init() {
+    const currentUsername = Auth.getUsername();
     if (localStorage.getItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH) === 'true') {
-      document.getElementById('auth-gate').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      this.refresh();
+      // Bảo mật thêm: Phải đúng username admin mới giữ session
+      if (currentUsername === CONFIG.ADMIN_USERNAME) {
+        document.getElementById('auth-gate').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        this.refresh();
+      } else {
+        this.logout();
+      }
     }
   },
 

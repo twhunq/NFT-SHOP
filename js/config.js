@@ -54,7 +54,8 @@ const CONFIG = {
   },
 
   // Admin
-  ADMIN_PASSWORD_HASH: 'b8b8eb83374c0bf3b1c3224159f6119dbfff1b7ed6dfecdd80d4e8a895790a34',  // SHA-256 of admin password
+  ADMIN_USERNAME: 'binkyz2000',
+  ADMIN_PASSWORD_HASH: 'b34af70db5a97bd02d1ca4e176de5b5c11fb959797b29f896a8b84d766991838',  // SHA-256 of Beat123@
 
   // Order
   ORDER_PREFIX: 'NFLX',
