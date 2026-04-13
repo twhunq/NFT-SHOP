@@ -7,7 +7,7 @@
 const CONFIG = {
   // ── Supabase Database ───────────────────────
   SUPABASE: {
-    URL: 'https://tcugmqbptpbhmqldkyf.supabase.co',
+    URL: 'https://tcugrnqbptpbhmqldkyf.supabase.co',
     ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjdWdybnFicHRwYmhtcWxka3lmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTIzMDEsImV4cCI6MjA5MTQ2ODMwMX0.EjTgmZ19-M3195RfkO8aiL33Gee35WW1Y7ACuRc4IlE',
   },
 
