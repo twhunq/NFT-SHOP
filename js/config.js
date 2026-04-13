@@ -32,7 +32,7 @@ const CONFIG = {
   MBBANK: {
     BANK_ID: 'MB',
     ACCOUNT_NUMBER: '05331407888',   // ← Thay bằng STK thật
-    ACCOUNT_NAME: 'TRAN TRUNG',     // ← Thay bằng tên thật
+    ACCOUNT_NAME: 'TRAN TUAN HUNG',     // ← Thay bằng tên thật
     TEMPLATE: 'compact2',
   },
 

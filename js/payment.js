@@ -118,7 +118,6 @@ const Payment = {
         <!-- Manual Fallback Button (Always shown) -->
         <div id="manual-confirm-area">
           <div class="border-t border-outline-variant/10 pt-4">
-            <p class="text-xs text-on-surface-variant text-center mb-3">Nếu hệ thống chưa phát hiện, bạn có thể xác nhận thủ công:</p>
             <button id="btn-confirm-payment" 
               onclick="Payment.confirmPayment('${order.id}')"
               class="w-full py-3 bg-surface-container-highest text-on-surface rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface-bright transition-all">
@@ -204,7 +203,7 @@ const Payment = {
       transactionId: result.transactionId || '',
       transactionDate: result.transactionDate || '',
     });
-    
+
     // Yêu cầu của khách: Dừng ở đây, KHÔNG TỰ ĐỘNG CHUYỂN màn hình đơn hàng.
     // Người dùng phải bấm vào nút "Tôi đã thanh toán xong" để lấy tài khoản.
   },
