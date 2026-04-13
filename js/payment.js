@@ -382,10 +382,10 @@ const Payment = {
 
         <!-- Action Buttons -->
         <div class="grid grid-cols-2 gap-3">
-          <a href="${data.login_link}" target="_blank" rel="noopener" 
+          <a href="huong-dan.html" target="_blank" rel="noopener" 
             class="py-3 bg-primary-container text-on-primary-container rounded-lg font-bold text-sm text-center flex items-center justify-center gap-2 hover:opacity-90 transition-all">
-            <span class="material-symbols-outlined text-base">open_in_new</span>
-            Mở Netflix
+            <span class="material-symbols-outlined text-base">help</span>
+            Hướng dẫn
           </a>
           <button onclick="Utils.copyToClipboard('${data.login_link}')"
             class="py-3 bg-surface-container-highest text-on-surface rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface-bright transition-all">
