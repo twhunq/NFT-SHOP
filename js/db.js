@@ -27,10 +27,12 @@ const DB = {
 
   async createOrder(data) {
     const orderCode = this.generateOrderCode();
+    const currentUser = Auth.getUsername() || 'guest';
     const order = {
       order_code: orderCode,
       type: data.type || 'mobile',
-      user_id: Auth.getUsername() || '',
+      username: currentUser,          // Original schema column (NOT NULL)
+      user_id: currentUser,           // Migration column
       email: data.email || '',
       phone: data.phone || '',
       amount: CONFIG.PRICE,
