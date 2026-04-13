@@ -33,6 +33,7 @@ const DB = {
       type: data.type || 'mobile',
       username: currentUser,          // Original schema column (NOT NULL)
       user_id: currentUser,           // Migration column
+      device_id: data.type || 'web',  // Original schema column (NOT NULL)
       email: data.email || '',
       phone: data.phone || '',
       amount: CONFIG.PRICE,
