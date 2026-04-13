@@ -85,6 +85,12 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+}
+
+.modal-overlay.modal-enter {
+  opacity: 1;
 }
 
 .modal-content {
@@ -98,10 +104,10 @@
   box-shadow: 0 25px 80px rgba(0,0,0,0.6);
   transform: scale(0.95) translateY(20px);
   opacity: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* fast bounce effect */
 }
 
-.modal-content.modal-enter {
+.modal-overlay.modal-enter .modal-content {
   transform: scale(1) translateY(0);
   opacity: 1;
 }
@@ -424,13 +430,10 @@
 
   .modal-content {
     max-height: 95vh;
-    border-radius: 16px 16px 0 0;
-    margin-top: auto;
   }
-
+  
   .modal-overlay {
-    align-items: flex-end;
-    padding: 0;
+    padding: 16px;
   }
 }
 

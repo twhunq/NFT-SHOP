@@ -112,9 +112,9 @@
 
   <!-- Order Table -->
   <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse" id="order-table">
-        <thead>
+    <div class="">
+      <table class="w-full text-left border-collapse block md:table" id="order-table">
+        <thead class="hidden md:table-header-group">
           <tr class="bg-surface-container-high/50 text-on-surface-variant text-xs uppercase tracking-wider font-label">
             <th class="px-6 py-5 font-semibold">Mã đơn</th>
             <th class="px-6 py-5 font-semibold">Gói / Tài khoản</th>
@@ -123,7 +123,7 @@
             <th class="px-6 py-5 font-semibold text-right">Thao tác</th>
           </tr>
         </thead>
-        <tbody id="order-tbody" class="divide-y divide-surface-container-highest/30">
+        <tbody id="order-tbody" class="divide-y divide-surface-container-highest/30 md:divide-y-0 block md:table-row-group w-full">
           <!-- Dynamic rows -->
         </tbody>
       </table>
@@ -312,7 +312,8 @@ const HistoryApp = {
     const pageOrders = this.currentOrders.slice(start, start + this.perPage);
 
     tbody.innerHTML = pageOrders.map(order => `
-      <tr class="group hover:bg-surface-container-high/30 transition-colors">
+      <!-- Desktop Row -->
+      <tr class="hidden md:table-row group hover:bg-surface-container-high/30 transition-colors">
         <td class="px-6 py-5 font-headline font-bold text-primary italic text-sm">${order.id}</td>
         <td class="px-6 py-5">
           <div class="flex flex-col">
@@ -336,6 +337,37 @@ const HistoryApp = {
               <a href="khieu-nai.html?order=${order.id}" class="text-xs font-bold text-on-surface-variant hover:text-primary-container transition-colors tracking-tight">KHIẾU NẠI</a>
             ` : ''}
           </div>
+        </td>
+      </tr>
+
+      <!-- Mobile Card -->
+      <tr class="md:hidden border-b border-surface-container-highest/30 last:border-b-0 block w-full">
+        <td class="p-4 block w-full">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold mb-1">Mã đơn</div>
+              <div class="font-headline font-bold text-primary italic text-sm">${order.id}</div>
+            </div>
+            <div>${Utils.statusBadge(order.status)}</div>
+          </div>
+          <div class="bg-surface-container/30 p-3 rounded-lg mb-3">
+            <div class="font-semibold text-on-surface text-sm mb-1">${Utils.packageLabel(order.type)}</div>
+            <div class="text-xs text-on-surface-variant font-mono truncate">${order.accountInfo?.email || order.paymentRef}</div>
+          </div>
+          <div class="flex justify-between items-center text-xs text-on-surface-variant mb-4">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">calendar_today</span> ${Utils.formatDate(order.createdAt)}</span>
+            <span>${Utils.formatRelative(order.createdAt)}</span>
+          </div>
+          ${order.status === 'completed' ? `
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="HistoryApp.showOrderDetail('${order.id}')" class="flex items-center justify-center gap-1.5 bg-tertiary-container/10 hover:bg-tertiary-container/20 text-tertiary-container py-2.5 rounded border border-tertiary-container/10 text-[11px] font-bold tracking-wider transition-colors outline-none cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">visibility</span> CHI TIẾT
+              </button>
+              <a href="khieu-nai.html?order=${order.id}" class="flex items-center justify-center gap-1.5 bg-surface-container border border-surface-container-highest hover:bg-surface-container-highest text-on-surface-variant hover:text-primary-container py-2.5 rounded text-[11px] font-bold tracking-wider transition-colors outline-none cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">support_agent</span> KHIẾU NẠI
+              </a>
+            </div>
+          ` : ''}
         </td>
       </tr>
     `).join('');

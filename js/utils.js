@@ -123,9 +123,11 @@ const Utils = {
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.body.style.overflow = 'hidden';
-      // Animate in
+      // Animate in: double requestAnimationFrame ensures the browser applies the flex display before transitioning
       requestAnimationFrame(() => {
-        modal.querySelector('.modal-content')?.classList.add('modal-enter');
+        requestAnimationFrame(() => {
+          modal.classList.add('modal-enter');
+        });
       });
     }
   },
@@ -133,14 +135,15 @@ const Utils = {
   hideModal(id) {
     const modal = document.getElementById(id);
     if (modal) {
-      modal.querySelector('.modal-content')?.classList.remove('modal-enter');
+      modal.classList.remove('modal-enter');
       setTimeout(() => {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
         document.body.style.overflow = '';
-      }, 200);
+      }, 150); // Matches CSS transition duration
     }
   },
+
 
   // ── Loading State ────────────────────────
   setLoading(element, loading, originalText = '') {
