@@ -115,8 +115,8 @@ const Payment = {
           <p class="text-xs text-yellow-200/80">Vui lòng chuyển <strong>đúng số tiền</strong> và <strong>đúng nội dung</strong> để hệ thống xác nhận tự động.</p>
         </div>
 
-        <!-- Manual Fallback Button (hidden initially, shown after 60s) -->
-        <div id="manual-confirm-area" class="hidden">
+        <!-- Manual Fallback Button (Always shown) -->
+        <div id="manual-confirm-area">
           <div class="border-t border-outline-variant/10 pt-4">
             <p class="text-xs text-on-surface-variant text-center mb-3">Nếu hệ thống chưa phát hiện, bạn có thể xác nhận thủ công:</p>
             <button id="btn-confirm-payment" 
@@ -159,10 +159,6 @@ const Payment = {
       },
     });
 
-    // Show manual fallback button after configured delay
-    setTimeout(() => {
-      this._showManualFallback();
-    }, CONFIG.AUTOCHECK.FALLBACK_MANUAL_DELAY_MS);
   },
 
   // ── Show manual fallback button ─────────
