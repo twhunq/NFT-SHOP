@@ -190,6 +190,10 @@ const Payment = {
           <p class="autocheck-subtitle">Đang chuẩn bị tài khoản Netflix...</p>
         </div>
       `;
+      // Tự động cuộn xuống để người dùng thấy thông báo xanh lá
+      setTimeout(() => {
+        statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     }
 
     // Hide manual button
