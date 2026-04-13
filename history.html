@@ -235,7 +235,8 @@ const HistoryApp = {
       this.render();
       return;
     }
-    this.currentOrders = await DB.getMyOrders();
+    const all = await DB.getMyOrders();
+    this.currentOrders = all.filter(o => o.status === 'completed');
     this.currentPage = 1;
     this.render();
   },
@@ -246,9 +247,10 @@ const HistoryApp = {
 
     const all = Auth.isLoggedIn() ? await DB.getMyOrders() : [];
     this.currentOrders = all.filter(o =>
-      o.id.toUpperCase().includes(query) ||
+      o.status === 'completed' && 
+      (o.id.toUpperCase().includes(query) ||
       o.paymentRef.toUpperCase().includes(query) ||
-      (o.email && o.email.toUpperCase().includes(query))
+      (o.email && o.email.toUpperCase().includes(query)))
     );
     this.currentPage = 1;
     this.render();
