@@ -382,20 +382,32 @@
 <script src="js/payment.js"></script>
 <script>
   const HomeApp = {
+    _buying: false,  // Chống double-click
+
     selectPackage(type) {
       document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
       document.getElementById(`pkg-${type}`)?.classList.add('selected');
     },
 
     async buyPackage(type) {
+      if (this._buying) return;
+      this._buying = true;
+
       Auth.requireLogin(async () => {
         try {
           const result = await Payment.startPayment(type);
         } catch (err) {
           console.error('[HomeApp] buyPackage ERROR:', err);
           Utils.toast(err.message, 'error');
+        } finally {
+          setTimeout(() => { this._buying = false; }, 2000);
         }
       });
+
+      // Reset nếu user chưa login (requireLogin sẽ show modal)
+      if (!Auth.isLoggedIn()) {
+        this._buying = false;
+      }
     }
   };
 
@@ -404,17 +416,9 @@
 
   // Close modal on backdrop click
   document.getElementById('payment-modal')?.addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) Utils.hideModal('payment-modal');
-  });
-
-  // Fallback: attach click handlers via JS in case inline onclick doesn't fire
-  document.getElementById('btn-buy-mobile')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    HomeApp.buyPackage('mobile');
-  });
-  document.getElementById('btn-buy-tv')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    HomeApp.buyPackage('tv');
+    if (e.target === e.currentTarget) {
+      Payment._cancelPayment();
+    }
   });
 </script>
 </body>

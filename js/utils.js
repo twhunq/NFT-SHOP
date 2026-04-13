@@ -172,12 +172,20 @@ const Utils = {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   },
 
-  // ── Countdown Timer ──────────────────────
+  // ── Countdown Timer (cancellable) ─────────
+  _countdownCancelled: false,
+
   startCountdown(elementId, endTime, onExpire) {
     const el = document.getElementById(elementId);
     if (!el) return;
 
+    // Reset cancel flag
+    this._countdownCancelled = false;
+
     const tick = () => {
+      // Check if cancelled
+      if (this._countdownCancelled) return;
+
       const remaining = endTime - Date.now();
       if (remaining <= 0) {
         el.textContent = '00:00';
@@ -190,5 +198,9 @@ const Utils = {
       requestAnimationFrame(tick);
     };
     tick();
+  },
+
+  stopCountdown() {
+    this._countdownCancelled = true;
   },
 };

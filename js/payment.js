@@ -6,6 +6,8 @@
  */
 
 const Payment = {
+  _isProcessing: false,  // Chống double-click
+
   // ── Generate VietQR URL ──────────────────
   generateQRUrl(amount, reference) {
     const { BANK_ID, ACCOUNT_NUMBER, TEMPLATE } = CONFIG.MBBANK;
@@ -15,13 +17,22 @@ const Payment = {
 
   // ── Create payment order + show modal ────
   async startPayment(type) {
-    // Create order in DB (now async)
-    const order = await DB.createOrder({ type, status: 'pending' });
+    // Chống double-click tạo nhiều đơn
+    if (this._isProcessing) return null;
+    this._isProcessing = true;
 
-    // Show payment modal with auto-check
-    this._showPaymentModal(order);
+    try {
+      // Create order in DB (now async)
+      const order = await DB.createOrder({ type, status: 'pending' });
 
-    return order;
+      // Show payment modal with auto-check
+      this._showPaymentModal(order);
+
+      return order;
+    } finally {
+      // Reset sau 2 giây để cho phép tạo đơn mới
+      setTimeout(() => { this._isProcessing = false; }, 2000);
+    }
   },
 
   // ── Render Payment Modal Content ─────────
@@ -134,6 +145,11 @@ const Payment = {
     // Start countdown
     Utils.startCountdown('payment-timer', expiresAt, async () => {
       AutoCheck.stopPolling();
+      // GUARD: Không ghi đè nếu đơn đã paid/completed
+      const currentOrder = await DB.getOrder(order.id);
+      if (currentOrder && (currentOrder.status === 'paid' || currentOrder.status === 'completed')) {
+        return; // Đơn đã thanh toán, không làm gì
+      }
       await DB.updateOrder(order.id, { status: 'failed' });
       Utils.hideModal('payment-modal');
       Utils.toast('Đơn hàng đã hết hạn thanh toán', 'error');
@@ -171,6 +187,7 @@ const Payment = {
   // ── Cancel payment and close modal ──────
   _cancelPayment(orderId) {
     AutoCheck.stopPolling();
+    Utils.stopCountdown();
     Utils.hideModal('payment-modal');
   },
 
@@ -213,8 +230,9 @@ const Payment = {
     const btn = document.getElementById('btn-confirm-payment');
     Utils.setLoading(btn, true);
 
-    // Stop auto-check since user is confirming manually
+    // Stop auto-check and countdown timer
     AutoCheck.stopPolling();
+    Utils.stopCountdown();
 
     try {
       const order = await DB.getOrder(orderId);
@@ -264,6 +282,9 @@ const Payment = {
       const data = await API.getLink();
 
       if (data.status === 'SUCCESS') {
+        // Dừng timer trước khi cập nhật để tránh race condition
+        Utils.stopCountdown();
+
         await DB.updateOrder(orderId, {
           status: 'completed',
           loginLink: data.login_link,
@@ -491,6 +512,9 @@ const Payment = {
       const result = await API.tvLogin(order.cookieId, tvCode);
 
       if (result.status === 'SUCCESS') {
+        // Dừng timer trước khi cập nhật để tránh race condition
+        Utils.stopCountdown();
+
         await DB.updateOrder(orderId, {
           status: 'completed',
           tvCode: tvCode,
