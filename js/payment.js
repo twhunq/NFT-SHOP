@@ -190,33 +190,23 @@ const Payment = {
           <p class="autocheck-subtitle">Đang chuẩn bị tài khoản Netflix...</p>
         </div>
       `;
-      // Tự động cuộn xuống để người dùng thấy thông báo xanh lá
+      // Tự động cuộn xuống nút tôi đã thanh toán xong
       setTimeout(() => {
-        statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const btn = document.getElementById('btn-confirm-payment');
+        if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'end' });
       }, 100);
     }
 
-    // Hide manual button
-    const manualArea = document.getElementById('manual-confirm-area');
-    if (manualArea) manualArea.classList.add('hidden');
-
-    // Mark as paid
+    // Mark as paid in DB
     await DB.updateOrder(order.id, {
       status: 'paid',
       paidAt: new Date().toISOString(),
       transactionId: result.transactionId || '',
       transactionDate: result.transactionDate || '',
     });
-
-    // Small delay for UX (show success animation)
-    await new Promise(r => setTimeout(r, 1500));
-
-    // Deliver based on type
-    if (order.type === 'mobile') {
-      await this._deliverMobileLink(order.id);
-    } else {
-      await this._deliverTVSetup(order.id);
-    }
+    
+    // Yêu cầu của khách: Dừng ở đây, KHÔNG TỰ ĐỘNG CHUYỂN màn hình đơn hàng.
+    // Người dùng phải bấm vào nút "Tôi đã thanh toán xong" để lấy tài khoản.
   },
 
   // ── Confirm Payment (manual fallback) ───
