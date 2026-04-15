@@ -16,6 +16,11 @@ const CONFIG = {
     REDIRECT_URI: window.location.origin + window.location.pathname,
   },
 
+  // TMDB (phim trending miễn phí) – Lấy API key tại https://www.themoviedb.org/settings/api
+  TMDB: {
+    API_KEY: '3639cb361f041c34af71045cc18b4042', // Dán API key miễn phí của bạn vào đây
+  },
+
   // Netflix Cookie API
   API_BASE: 'https://nft-netflix.onrender.com',
   ENDPOINTS: {
