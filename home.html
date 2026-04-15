@@ -81,8 +81,9 @@
     <a href="home.html" class="text-2xl font-black text-red-600 tracking-tighter font-manrope z-10">NETFLIX PREMIUM</a>
     <div class="hidden md:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
       <a class="text-red-600 font-bold border-b-2 border-red-600 pb-1 font-manrope text-sm tracking-tight" href="home.html">Trang chủ</a>
-      <a class="text-zinc-400 hover:text-zinc-100 transition-colors font-manrope text-sm tracking-tight" href="khieu-nai.html">Khiếu nại</a>
+      <a class="text-zinc-400 hover:text-zinc-100 transition-colors font-manrope text-sm tracking-tight" href="huong-dan.html">Hướng dẫn</a>
       <a class="text-zinc-400 hover:text-zinc-100 transition-colors font-manrope text-sm tracking-tight" href="history.html">Lịch sử</a>
+      <a id="nav-admin-link" class="hidden text-zinc-400 hover:text-zinc-100 transition-colors font-manrope text-sm tracking-tight" href="admin.html">Admin</a>
     </div>
     <div class="flex items-center gap-4 z-10">
       <div id="nav-auth"></div>
@@ -100,8 +101,9 @@
     <span class="material-symbols-outlined text-3xl">close</span>
   </button>
   <a href="home.html" class="text-red-600">Trang chủ</a>
-  <a href="khieu-nai.html">Khiếu nại</a>
+  <a href="huong-dan.html">Hướng dẫn</a>
   <a href="history.html">Lịch sử</a>
+  <a id="mobile-admin-link" href="admin.html" class="hidden">Admin</a>
   <div id="mobile-auth"></div>
 </div>
 
@@ -109,26 +111,26 @@
 
   <!-- Hero Section -->
   <section class="relative h-[500px] md:h-[580px] flex items-center justify-center">
-    <div class="absolute inset-0 z-0 overflow-hidden">
-      <img alt="Cinematic background" class="w-full h-full object-cover scale-110 blur-[4px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdC_v5WitE6Xj41WIwOp1VB7UeENlQTwLicYXpWBLRDJW-rUHa86EZdDDnOx3Q0aZbdRv_1k2j2D9YS-rlZE3aUUVPMZEdrZNmIvLSCbFNaQFBXeDe8GfzNNf0Z73vtZN7F5alRnEjuBw9joNUOS1R3Hns5mOjatdDDZm3M-WDaet3iJKBs7rTSHuFJeIh0NblRUuHhsQtwG3b2fJreQmKo4fjyc10GxONQ1Y5m9Enr0TjzZ-Z3uMEcjNGIH675JDnSprQ2hh4-eC"/>
+    <div class="absolute inset-0 z-0 overflow-hidden" data-parallax data-parallax-speed="0.08">
+      <img alt="Cinematic background" class="w-full h-full object-cover scale-110 blur-[4px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdC_v5WitE6Xj41WIwOp1VB7UeENlQTwLicYXpWBLRDJW-rUHa86EZdDDnOx3Q0aZbdRv_1k2j2D9YS-rlZE3aUUVPMZEdrZNmIvLSCbFNaQFBXeDe8GfzNNf0Z73vtZN7F5alRnEjuBw9joNUOS1R3Hns5mOjatdDDZm3M-WDaet3iJKBs7rTSHuFJeIh0NblRUuHhsQtwG3b2fJreQmKo4fjyc10GxONQ1Y5m9Enr0Tjz-Z3uMEcjNGIH675JDnSprQ2hh4-eC"/>
       <div class="absolute inset-0 hero-gradient"></div>
     </div>
-    <div class="relative z-10 w-full text-center px-4 max-w-4xl mx-auto page-enter">
+    <div class="relative z-10 w-full text-center px-4 max-w-4xl mx-auto page-enter" data-parallax data-parallax-speed="0.03" data-parallax-direction="up">
       <span class="inline-block bg-primary-container/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-6 font-manrope uppercase">Ưu đãi giới hạn</span>
       <h1 class="text-5xl md:text-8xl font-black font-manrope tracking-tighter mb-6 leading-[0.9]">
         Netflix Premium<br/>
-        <span class="text-primary">chỉ 20k/tuần</span>
+        <span class="text-primary">hoàn toàn miễn phí</span>
       </h1>
       <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-10 font-body leading-relaxed">
         Trải nghiệm chất lượng 4K Ultra HD đỉnh cao. Xem không giới hạn trên mọi thiết bị từ điện thoại đến Smart TV.
       </p>
       <div class="flex flex-col md:flex-row items-center justify-center gap-4">
         <a class="w-full md:w-auto px-8 py-4 bg-primary-container text-on-primary-container rounded-lg font-bold text-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 pulse-glow" href="#pricing">
-          <span>Mua ngay</span>
-          <span class="material-symbols-outlined">arrow_forward</span>
+          <span>Nhận ngay</span>
         </a>
-        <a href="khieu-nai.html" class="w-full md:w-auto px-8 py-4 bg-surface-container-highest/50 backdrop-blur-md border border-outline-variant/20 rounded-lg font-bold text-lg hover:bg-surface-container-highest transition-all text-center">
-          Hỗ trợ & Khiếu nại
+        <a id="btn-facebook-group" class="hidden w-full md:w-auto px-8 py-4 bg-surface-container-high text-on-surface rounded-lg font-bold text-lg hover:bg-surface-bright transition-all flex items-center justify-center gap-2" href="#">
+        
+          <span>Nhóm Facebook</span>
         </a>
       </div>
     </div>
@@ -149,7 +151,7 @@
           Chọn gói <span class="text-primary">phù hợp</span> với bạn
         </h2>
         <p class="text-on-surface-variant text-lg max-w-xl mx-auto">
-          Cùng giá 20k/tuần — chỉ khác cách đăng nhập. Chọn thiết bị bạn muốn xem Netflix.
+          Hoàn toàn miễn phí — chỉ khác cách đăng nhập. Chọn thiết bị bạn muốn xem Netflix.
         </p>
       </div>
 
@@ -167,8 +169,7 @@
             <p class="text-sm text-on-surface-variant">Xem trên điện thoại, máy tính, tablet</p>
           </div>
           <div class="flex items-baseline gap-1 mb-6">
-            <span class="text-5xl font-black font-manrope">20k</span>
-            <span class="text-on-surface-variant">/tuần</span>
+            <span class="text-5xl font-black font-manrope text-green-400">Miễn phí</span>
           </div>
           <ul class="space-y-3 mb-8">
             <li class="flex items-center gap-3 text-sm">
@@ -189,9 +190,9 @@
             </li>
           </ul>
           <button id="btn-buy-mobile" style="position:relative;z-index:10" class="w-full py-4 bg-primary-container text-on-primary-container rounded-xl font-black text-base active:scale-[0.98] transition-all shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2"
-            onclick="event.stopPropagation(); HomeApp.buyPackage('mobile')">
+            onclick="event.stopPropagation(); HomeApp.claimPackage('mobile')">
             <span class="material-symbols-outlined">shopping_cart</span>
-            Mua ngay
+            Nhận ngay
           </button>
         </div>
 
@@ -208,8 +209,7 @@
             <p class="text-sm text-on-surface-variant">Xem trên Smart TV, Android Box, Fire Stick</p>
           </div>
           <div class="flex items-baseline gap-1 mb-6">
-            <span class="text-5xl font-black font-manrope">20k</span>
-            <span class="text-on-surface-variant">/tuần</span>
+            <span class="text-5xl font-black font-manrope text-green-400">Miễn phí</span>
           </div>
           <ul class="space-y-3 mb-8">
             <li class="flex items-center gap-3 text-sm">
@@ -230,9 +230,9 @@
             </li>
           </ul>
           <button id="btn-buy-tv" style="position:relative;z-index:10" class="w-full py-4 bg-tertiary-container text-on-tertiary-container rounded-xl font-black text-base active:scale-[0.98] transition-all shadow-lg shadow-tertiary-container/20 flex items-center justify-center gap-2"
-            onclick="event.stopPropagation(); HomeApp.buyPackage('tv')">
+            onclick="event.stopPropagation(); HomeApp.claimPackage('tv')">
             <span class="material-symbols-outlined">tv</span>
-            Mua ngay
+            Nhận ngay
           </button>
         </div>
       </div>
@@ -243,24 +243,24 @@
   <section class="py-24 px-6 bg-surface-container-lowest/50">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-black font-manrope tracking-tighter mb-4">Cách mua <span class="text-primary">đơn giản</span></h2>
+        <h2 class="text-3xl md:text-4xl font-black font-manrope tracking-tighter mb-4">Cách nhận <span class="text-primary">đơn giản</span></h2>
         <p class="text-on-surface-variant">Chỉ 3 bước — hoàn thành trong 2 phút</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="text-center">
           <div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-black font-manrope mb-6">1</div>
           <h4 class="font-bold text-lg mb-2 font-manrope">Chọn gói</h4>
-          <p class="text-sm text-on-surface-variant">Mobile/PC hoặc TV — cùng giá 20k/tuần</p>
+          <p class="text-sm text-on-surface-variant">Mobile/PC hoặc TV — hoàn toàn miễn phí</p>
         </div>
         <div class="text-center">
           <div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-black font-manrope mb-6">2</div>
-          <h4 class="font-bold text-lg mb-2 font-manrope">Thanh toán</h4>
-          <p class="text-sm text-on-surface-variant">Quét QR MBBank, chuyển 20k đúng nội dung</p>
+          <h4 class="font-bold text-lg mb-2 font-manrope">Xác nhận</h3>
+          <p class="text-sm text-on-surface-variant">Hệ thống sẽ kiểm tra và cấp tài khoản</p>
         </div>
         <div class="text-center">
           <div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-black font-manrope mb-6">3</div>
-          <h4 class="font-bold text-lg mb-2 font-manrope">Nhận tài khoản</h4>
-          <p class="text-sm text-on-surface-variant">Link đăng nhập (Mobile/PC) hoặc nhập mã TV tức thì</p>
+          <h4 class="font-bold text-lg mb-2 font-manrope">Xem Netflix</h4>
+          <p class="text-sm text-on-surface-variant">Nhận link (Mobile/PC) hoặc mã (TV) tức thì</p>
         </div>
       </div>
     </div>
@@ -312,7 +312,7 @@
             <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
           </button>
           <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
-            Sau khi thanh toán, hệ thống tự động lấy một tài khoản Netflix Premium từ kho. Bạn nhận được link đặc biệt — bấm vào là vào Netflix ngay không cần nhập mật khẩu. Link có hiệu lực 7 ngày, nếu hết hạn thì vào trang Khiếu nại để nhận link mới miễn phí.
+            Sau khi xác nhận nhận tài khoản, hệ thống tự động lấy một tài khoản Netflix Premium từ kho. Bạn nhận được link đặc biệt — bấm vào là vào Netflix ngay không cần nhập mật khẩu. Link có hiệu lực 7 ngày. Mỗi tài khoản được nhận 3 lần mỗi ngày.
           </div>
         </div>
         <div class="bg-surface-container rounded-xl overflow-hidden">
@@ -324,13 +324,13 @@
             Gói TV yêu cầu bạn nhập mã 8 ký tự hiển thị trên màn hình Smart TV vào hệ thống. Sau đó TV tự động đăng nhập Netflix. Gói Mobile/PC thì bạn nhận link bấm vào là xem được ngay.
           </div>
         </div>
-        <div class="bg-surface-container rounded-xl overflow-hidden">
+        <div class="bg-surface-container rounded-xl overflow-hidden hidden">
           <button class="w-full text-left p-5 flex justify-between items-center font-bold text-sm hover:bg-surface-container-high/30 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').textContent = this.nextElementSibling.classList.contains('hidden') ? 'expand_more' : 'expand_less'">
             <span>Nếu link bị lỗi thì sao?</span>
             <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
           </button>
           <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
-            Vào trang <strong>Khiếu nại</strong>, nhập mã đơn hàng — hệ thống tự động kiểm tra và cấp link/mã mới trong 30 giây. Mỗi đơn được đổi tối đa 3 lần trong 24 giờ.
+            Bạn có thể nhận link mới hoàn toàn miễn phí.
           </div>
         </div>
         <div class="bg-surface-container rounded-xl overflow-hidden">
@@ -339,7 +339,7 @@
             <span class="material-symbols-outlined faq-icon text-on-surface-variant">expand_more</span>
           </button>
           <div class="px-5 pb-5 text-sm text-on-surface-variant hidden">
-            Chuyển khoản ngân hàng MBBank qua mã QR. Chuyển đúng số tiền (20.000đ) và đúng nội dung để hệ thống xử lý nhanh nhất.
+            Hoàn toàn miễn phí, bạn không cần phải thanh toán gì cả.
           </div>
         </div>
       </div>
@@ -353,21 +353,19 @@
   <div class="flex flex-col md:flex-row justify-between items-center px-8 py-12 space-y-4 md:space-y-0 max-w-7xl mx-auto">
     <div class="text-lg font-black text-red-600 font-manrope">NETFLIX PREMIUM</div>
     <div class="flex flex-wrap justify-center gap-6 font-inter text-xs leading-relaxed text-zinc-500 uppercase tracking-widest">
-      <a class="hover:text-red-400 transition-colors" href="khieu-nai.html">Khiếu nại</a>
       <a class="hover:text-red-400 transition-colors" href="history.html">Lịch sử</a>
       <a class="hover:text-red-400 transition-colors" href="#">Điều khoản</a>
-      <a class="hover:text-red-400 transition-colors" href="#">Hướng dẫn</a>
     </div>
     <div class="font-inter text-xs leading-relaxed text-zinc-500">
-      © 2024 Netflix Premium. All rights reserved.
+      marineshop.vn shop premium uy tín, giá rẻ, chất lượng số 1 VN.
     </div>
   </div>
 </footer>
 
-<!-- Payment Modal -->
-<div id="payment-modal" class="modal-overlay hidden">
-  <div class="modal-content" id="payment-modal-content">
-    <!-- Content injected by Payment.js -->
+<!-- Claim Modal -->
+<div id="claim-modal" class="modal-overlay hidden">
+  <div class="modal-content" id="claim-modal-content">
+    <!-- Content injected by Claim.js -->
   </div>
 </div>
 
@@ -377,9 +375,12 @@
 <script src="js/db.js"></script>
 <script src="js/api.js"></script>
 <script src="js/utils.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/announcement.js"></script>
+<script src="js/facebook-group.js"></script>
 <script src="js/autocheck.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/payment.js"></script>
+<script src="js/claim.js"></script>
 <script>
   const HomeApp = {
     _buying: false,  // Chống double-click
@@ -389,15 +390,15 @@
       document.getElementById(`pkg-${type}`)?.classList.add('selected');
     },
 
-    async buyPackage(type) {
+    async claimPackage(type) {
       if (this._buying) return;
       this._buying = true;
 
       Auth.requireLogin(async () => {
         try {
-          const result = await Payment.startPayment(type);
+          const result = await Claim.startClaim(type);
         } catch (err) {
-          console.error('[HomeApp] buyPackage ERROR:', err);
+          console.error('[HomeApp] claimPackage ERROR:', err);
           Utils.toast(err.message, 'error');
         } finally {
           setTimeout(() => { this._buying = false; }, 2000);
@@ -411,13 +412,32 @@
     }
   };
 
+  function renderAdminButtons() {
+    const isAdmin = Auth.getUsername() === CONFIG.ADMIN_USERNAME;
+    const navAdminLink = document.getElementById('nav-admin-link');
+    const mobileAdminLink = document.getElementById('mobile-admin-link');
+
+    if (isAdmin) {
+      navAdminLink?.classList.remove('hidden');
+      mobileAdminLink?.classList.remove('hidden');
+      return;
+    }
+
+    navAdminLink?.classList.add('hidden');
+    mobileAdminLink?.classList.add('hidden');
+  }
+
   // Init auth
   Auth.init();
+  renderAdminButtons();
+  FacebookGroup.initHomeButton();
+
+  window.addEventListener('auth-changed', renderAdminButtons);
 
   // Close modal on backdrop click
-  document.getElementById('payment-modal')?.addEventListener('click', (e) => {
+  document.getElementById('claim-modal')?.addEventListener('click', (e) => {
     if (e.target === e.currentTarget) {
-      Payment._cancelPayment();
+      Claim._cancelClaim();
     }
   });
 </script>

@@ -6,6 +6,15 @@
  */
 
 const Supabase = {
+  _authHeaders(accessToken = null) {
+    const token = accessToken || CONFIG.SUPABASE.ANON_KEY;
+    return {
+      'apikey': CONFIG.SUPABASE.ANON_KEY,
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    };
+  },
+
   /**
    * Gọi Supabase REST API
    * @param {string} table - Tên bảng
@@ -29,11 +38,7 @@ const Supabase = {
     if (order) url += `&order=${encodeURIComponent(order)}`;
     if (limit) url += `&limit=${limit}`;
 
-    const headers = {
-      'apikey': CONFIG.SUPABASE.ANON_KEY,
-      'Authorization': `Bearer ${CONFIG.SUPABASE.ANON_KEY}`,
-      'Content-Type': 'application/json',
-    };
+    const headers = this._authHeaders();
 
     if (single) {
       headers['Accept'] = 'application/vnd.pgrst.object+json';
@@ -139,11 +144,12 @@ const Supabase = {
   /** SELECT single row */
   async getOne(table, col, val, select = '*') {
     try {
-      return await this.query(table, {
+      const rows = await this.query(table, {
         filters: `${col}=eq.${encodeURIComponent(val)}`,
         select,
-        single: true,
+        limit: '1',
       });
+      return Array.isArray(rows) ? (rows[0] || null) : (rows || null);
     } catch {
       return null;
     }
@@ -155,5 +161,123 @@ const Supabase = {
       filters,
       ...options,
     });
+  },
+
+  // ── Supabase Auth (Password + Email Verification) ──
+  async _parseAuthError(res, fallbackMessage) {
+    const errData = await res.json().catch(() => ({}));
+    const message = errData.error_description || errData.msg || errData.message || fallbackMessage;
+    throw new Error(message);
+  },
+
+  async signUpWithPassword(email, password, redirectTo = '') {
+    const finalRedirect = redirectTo || CONFIG.AUTH.REDIRECT_URI;
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/signup`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: this._authHeaders(),
+      body: JSON.stringify({
+        email,
+        password,
+        data: { auth_provider: 'password' },
+        options: {
+          email_redirect_to: finalRedirect,
+        },
+      }),
+    });
+
+    if (!res.ok) {
+      await this._parseAuthError(res, 'Không thể đăng ký tài khoản');
+    }
+
+    return res.json();
+  },
+
+  async signInWithPassword(email, password) {
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/token?grant_type=password`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: this._authHeaders(),
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      await this._parseAuthError(res, 'Đăng nhập thất bại');
+    }
+
+    return res.json();
+  },
+
+  async resendSignupVerification(email, redirectTo = '') {
+    const finalRedirect = redirectTo || CONFIG.AUTH.REDIRECT_URI;
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/resend`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: this._authHeaders(),
+      body: JSON.stringify({
+        email,
+        type: 'signup',
+        options: {
+          email_redirect_to: finalRedirect,
+        },
+      }),
+    });
+
+    if (!res.ok) {
+      await this._parseAuthError(res, 'Không thể gửi lại email xác minh');
+    }
+
+    return true;
+  },
+
+  async sendPasswordReset(email, redirectTo = '') {
+    const finalRedirect = redirectTo || CONFIG.AUTH.REDIRECT_URI;
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/recover`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: this._authHeaders(),
+      body: JSON.stringify({
+        email,
+        redirect_to: finalRedirect,
+      }),
+    });
+
+    if (!res.ok) {
+      await this._parseAuthError(res, 'Không thể gửi email đặt lại mật khẩu');
+    }
+
+    return true;
+  },
+
+  async updateUserPassword(accessToken, newPassword) {
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/user`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: this._authHeaders(accessToken),
+      body: JSON.stringify({
+        password: newPassword,
+      }),
+    });
+
+    if (!res.ok) {
+      await this._parseAuthError(res, 'Không thể cập nhật mật khẩu');
+    }
+
+    return res.json();
+  },
+
+  async getAuthUser(accessToken) {
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/user`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: this._authHeaders(accessToken),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error_description || errData.msg || 'Không thể lấy thông tin tài khoản');
+    }
+
+    return res.json();
   },
 };

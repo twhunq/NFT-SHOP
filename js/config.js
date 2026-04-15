@@ -11,6 +11,11 @@ const CONFIG = {
     ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjdWdybnFicHRwYmhtcWxka3lmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTIzMDEsImV4cCI6MjA5MTQ2ODMwMX0.EjTgmZ19-M3195RfkO8aiL33Gee35WW1Y7ACuRc4IlE',
   },
 
+  AUTH: {
+    // Dùng cho Supabase Email OTP (magic link)
+    REDIRECT_URI: window.location.origin + window.location.pathname,
+  },
+
   // Netflix Cookie API
   API_BASE: 'https://nft-netflix.onrender.com',
   ENDPOINTS: {
@@ -21,24 +26,12 @@ const CONFIG = {
     MBBANK_CHECK: '/api/mbbank/check',
   },
 
-  // Auto-check payment (MB Bank)
-  AUTOCHECK: {
-    POLL_INTERVAL_MS: 5000,          // Poll mỗi 5 giây
-    MAX_POLL_ATTEMPTS: 180,          // Tối đa 180 lần = 15 phút
-    FALLBACK_MANUAL_DELAY_MS: 60000, // Hiện nút xác nhận thủ công sau 60s
-  },
+  // Giới hạn nhận mỗi ngày
+  DAILY_CLAIM_LIMIT: 3,
 
-  // MBBank Payment
-  MBBANK: {
-    BANK_ID: 'MB',
-    ACCOUNT_NUMBER: '05331407888',   // ← Thay bằng STK thật
-    ACCOUNT_NAME: 'TRAN TUAN HUNG',     // ← Thay bằng tên thật
-    TEMPLATE: 'compact2',
-  },
-
-  // Pricing
-  PRICE: 20000,
-  PRICE_FORMATTED: '20.000đ',
+  // Pricing (miễn phí)
+  PRICE: 0,
+  PRICE_FORMATTED: 'Miễn phí',
   DURATION_DAYS: 7,
 
   // Rate Limiting
@@ -59,13 +52,17 @@ const CONFIG = {
 
   // Order
   ORDER_PREFIX: 'NFLX',
-  PAYMENT_TIMEOUT_MS: 15 * 60 * 1000,  // 15 minutes
 
   // LocalStorage keys (chỉ lưu session)
   STORAGE_KEYS: {
     CURRENT_USER: 'nflx_current_user',
+    AUTH_ACCESS_TOKEN: 'nflx_auth_access_token',
+    AUTH_EMAIL: 'nflx_auth_email',
     RATE_LIMIT: 'nflx_rate_limit',
     ADMIN_AUTH: 'nflx_admin_auth',
+    ADMIN_SETTINGS: 'nflx_admin_settings',
+    DAILY_ACCESS_LOG: 'nflx_daily_access_log',
+    ANNOUNCEMENT_HIDE_UNTIL: 'nflx_announcement_hide_until',
   },
 
   // Pages

@@ -67,7 +67,7 @@
 </div>
 
 <main class="pt-32 pb-24 px-6 max-w-3xl mx-auto page-enter">
-  <header class="mb-12 text-center">
+  <header class="mb-12 text-center" data-parallax data-parallax-speed="0.025" data-parallax-direction="up">
     <h1 class="font-headline font-extrabold text-4xl mb-4">Hướng dẫn đăng nhập</h1>
     <p class="text-on-surface-variant">Làm theo các bước dưới đây để sử dụng tài khoản Netflix Premium.</p>
   </header>
@@ -153,6 +153,8 @@
 <script src="js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="js/utils.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/announcement.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
     Auth.initAuthUI();

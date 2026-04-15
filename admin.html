@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Admin Dashboard - NETFLIX PREMIUM</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <title>Admin - Cài đặt mã nhận</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link href="css/shared.css" rel="stylesheet"/>
@@ -14,317 +14,380 @@
       theme: {
         extend: {
           colors: {
-            "on-primary": "#690003", "outline-variant": "#5e3f3b", "on-primary-container": "#fff7f6",
-            "surface-dim": "#131313", "on-surface": "#e2e2e2", "background": "#131313",
-            "surface-container-low": "#1b1b1b", "tertiary": "#a7c8ff",
-            "surface-container-high": "#2a2a2a", "secondary": "#ffb4aa",
-            "surface-container-highest": "#353535", "surface-container": "#1f1f1f",
-            "surface": "#131313", "primary-container": "#e50914",
-            "on-surface-variant": "#e9bcb6", "tertiary-container": "#0072d7",
-            "surface-bright": "#393939", "primary": "#ffb4aa",
-            "on-tertiary-container": "#f8f9ff",
+            "on-primary": "#690003",
+            "on-primary-container": "#fff7f6",
+            "surface-dim": "#131313",
+            "on-surface": "#e2e2e2",
+            "background": "#131313",
+            "surface-container-low": "#1b1b1b",
+            "surface-container-high": "#2a2a2a",
+            "surface-container-highest": "#353535",
+            "surface-container": "#1f1f1f",
+            "surface": "#131313",
+            "primary-container": "#e50914",
+            "on-surface-variant": "#e9bcb6"
           },
-          fontFamily: { headline: ["Manrope"], body: ["Inter"], label: ["Inter"] }
+          fontFamily: { headline: ["Manrope"], body: ["Inter"] }
         },
       },
-    }
+    };
   </script>
   <style>
     body { background-color: #131313; font-family: 'Inter', sans-serif; }
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
-    .fill-1 { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
   </style>
 </head>
-<body class="bg-background text-on-surface font-body">
-
-<!-- Auth Gate -->
-<div id="auth-gate" class="min-h-screen flex items-center justify-center px-4">
-  <div class="bg-surface-container-low p-8 rounded-2xl shadow-2xl w-full max-w-sm">
-    <div class="text-center mb-8">
-      <div class="w-16 h-16 mx-auto rounded-full bg-primary-container/10 flex items-center justify-center mb-4">
-        <span class="material-symbols-outlined text-primary-container text-3xl">admin_panel_settings</span>
+<body class="bg-background text-on-surface">
+  <div id="auth-gate" class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-sm bg-surface-container-low rounded-2xl p-8 shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 mx-auto rounded-full bg-primary-container/15 flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-primary-container text-3xl">admin_panel_settings</span>
+        </div>
+        <h1 class="text-2xl font-headline font-black tracking-tight">Admin</h1>
+        <p class="text-sm text-on-surface-variant mt-1">Nhập mật khẩu để tiếp tục</p>
       </div>
-      <h1 class="text-2xl font-black font-headline tracking-tight">Admin Dashboard</h1>
-      <p class="text-sm text-on-surface-variant mt-1">Nhập mật khẩu để truy cập</p>
-    </div>
-    <div class="space-y-4">
-      <input type="password" id="admin-password" placeholder="Mật khẩu"
-        class="w-full bg-surface-container-highest border-0 border-b-2 border-surface-container-highest text-on-surface py-3 px-4 rounded-lg focus:ring-0 focus:border-primary-container transition-all"
-        onkeydown="if(event.key==='Enter') AdminApp.authenticate()"
-      />
-      <button onclick="AdminApp.authenticate()" class="w-full py-3 bg-primary-container text-on-primary-container rounded-lg font-bold active:scale-[0.98] transition-all">
-        Đăng nhập
-      </button>
+      <div class="space-y-4">
+        <input id="admin-password" type="password" placeholder="Mật khẩu admin"
+          data-validate="required"
+          class="w-full bg-surface-container-highest border-2 border-surface-container-highest focus:border-primary-container rounded-lg px-4 py-3"
+          onkeydown="if(event.key==='Enter') AdminApp.authenticate()"/>
+        <button onclick="AdminApp.authenticate()"
+          class="w-full py-3 rounded-lg bg-primary-container text-on-primary-container font-bold active:scale-[0.98] transition-all">
+          Đăng nhập
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Dashboard (hidden until auth) -->
-<div id="dashboard" class="hidden">
-  <!-- Nav -->
-  <nav class="fixed top-0 w-full z-50 bg-zinc-950/70 backdrop-blur-xl">
-    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-      <a href="home.html" class="text-2xl font-black text-red-600 tracking-tighter font-headline">NETFLIX PREMIUM</a>
-      <div class="flex items-center gap-4">
-        <span class="text-xs text-on-surface-variant bg-surface-container px-3 py-1 rounded-full">🔒 Admin</span>
-        <button onclick="AdminApp.logout()" class="text-xs text-red-400 hover:text-red-300 font-bold">Đăng xuất</button>
-      </div>
-    </div>
-  </nav>
-
-  <main class="pt-24 pb-20 px-4 min-h-screen max-w-7xl mx-auto">
-    <!-- Header -->
-    <header class="mb-8 mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <div>
-        <h1 class="text-3xl font-headline font-extrabold tracking-tighter text-white">Analytics Dashboard</h1>
-        <p class="text-on-surface-variant text-sm">Theo dõi doanh thu và hoạt động kinh doanh</p>
-      </div>
-      <div class="flex gap-3">
-        <button onclick="AdminApp.refresh()" class="px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-surface-bright transition-all">
-          <span class="material-symbols-outlined text-base">refresh</span>
-          Làm mới
-        </button>
-        <button onclick="DB.exportCSV().catch(e => console.error(e))" class="px-4 py-2 bg-tertiary-container text-on-tertiary-container rounded-lg text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-all">
-          <span class="material-symbols-outlined text-base">download</span>
-          Xuất CSV
-        </button>
-      </div>
-    </header>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="stat-cards">
-      <!-- Dynamic -->
-    </div>
-
-    <!-- Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-      <!-- Revenue Chart -->
-      <div class="lg:col-span-8 bg-surface-container-low rounded-xl p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="font-headline font-bold text-lg">Doanh thu 7 ngày</h3>
-          <span class="text-xs text-on-surface-variant" id="chart-total-label"></span>
-        </div>
-        <div class="flex items-end gap-3 h-48" id="revenue-chart">
-          <!-- Dynamic bars -->
+  <div id="dashboard" class="hidden min-h-screen">
+    <nav class="sticky top-0 z-40 bg-black/70 backdrop-blur border-b border-surface-container-highest/40">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="home.html" class="text-red-600 text-xl md:text-2xl font-headline font-black tracking-tight">NETFLIX PREMIUM</a>
+        <div class="flex items-center gap-3">
+          <button onclick="AdminApp.refreshAnalytics()"
+            class="px-3 py-2 rounded-lg bg-surface-container-high text-sm font-bold hover:bg-surface-container-highest transition-colors">
+            Làm mới
+          </button>
+          <button onclick="AdminApp.logout()"
+            class="px-3 py-2 rounded-lg text-sm font-bold text-red-400 hover:text-red-300 transition-colors">
+            Đăng xuất
+          </button>
         </div>
       </div>
+    </nav>
 
-      <!-- Quick Stats -->
-      <div class="lg:col-span-4 space-y-4">
-        <div class="bg-surface-container-low rounded-xl p-6">
-          <h3 class="font-headline font-bold mb-4">Phân bổ gói</h3>
-          <div class="space-y-3" id="package-distribution">
-            <!-- Dynamic -->
+    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+      <section class="bg-surface-container-low rounded-xl p-5 md:p-6">
+        <div class="flex items-start justify-between gap-3 mb-5">
+          <div>
+            <h2 class="text-xl font-headline font-black tracking-tight">Cài đặt mã nhận</h2>
+            <p class="text-sm text-on-surface-variant mt-1">Người dùng phải nhập đúng mã này khi bấm nhận gói.</p>
+          </div>
+          <span class="text-xs px-2 py-1 rounded-full bg-surface-container-high">Bảo mật nhận gói</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3">
+          <input id="claim-code-input" type="text" maxlength="40" placeholder="VD: VIP2026"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-surface-container-highest border-2 border-surface-container-highest focus:border-primary-container rounded-lg px-4 py-3"/>
+          <button onclick="AdminApp.saveClaimCode()"
+            class="px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-bold">
+            Lưu mã
+          </button>
+          <button onclick="AdminApp.clearClaimCode()"
+            class="px-4 py-3 rounded-lg bg-surface-container-high text-on-surface font-bold">
+            Xóa mã
+          </button>
+        </div>
+        <p id="claim-code-status" class="text-xs text-on-surface-variant mt-3"></p>
+      </section>
+
+      <section class="bg-surface-container-low rounded-xl p-5 md:p-6">
+        <div class="flex items-start justify-between gap-3 mb-5">
+          <div>
+            <h2 class="text-xl font-headline font-black tracking-tight">Popup thông báo</h2>
+            <p class="text-sm text-on-surface-variant mt-1">Nội dung popup hiển thị cho người dùng khi vào trang.</p>
+          </div>
+          <span class="text-xs px-2 py-1 rounded-full bg-surface-container-high">Thông báo hệ thống</span>
+        </div>
+
+        <div class="space-y-3">
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input id="announcement-enabled" type="checkbox" class="rounded border-surface-container-highest bg-surface-container-highest text-primary-container focus:ring-primary-container"/>
+            <span>Bật popup thông báo</span>
+          </label>
+          <textarea id="announcement-content" rows="4" maxlength="1200"
+            placeholder="Nhập nội dung thông báo..."
+            class="w-full bg-surface-container-highest border-2 border-surface-container-highest focus:border-primary-container rounded-lg px-4 py-3 text-sm"></textarea>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="AdminApp.saveAnnouncementSettings()"
+              class="px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-bold">
+              Lưu thông báo
+            </button>
+            <button onclick="AdminApp.clearAnnouncementSettings()"
+              class="px-4 py-3 rounded-lg bg-surface-container-high text-on-surface font-bold">
+              Xóa nội dung & tắt
+            </button>
           </div>
         </div>
-        <div class="bg-surface-container-low rounded-xl p-6">
-          <h3 class="font-headline font-bold mb-4">Tỷ lệ</h3>
-          <div class="space-y-3" id="rates-section">
-            <!-- Dynamic -->
+        <p id="announcement-status" class="text-xs text-on-surface-variant mt-3"></p>
+      </section>
+
+      <section class="bg-surface-container-low rounded-xl p-5 md:p-6">
+        <div class="flex items-start justify-between gap-3 mb-5">
+          <div>
+            <h2 class="text-xl font-headline font-black tracking-tight">Nút Nhóm Facebook</h2>
+            <p class="text-sm text-on-surface-variant mt-1">Cấu hình URL cho nút "Nhóm Facebook" trên trang chủ.</p>
+          </div>
+          <span class="text-xs px-2 py-1 rounded-full bg-surface-container-high">Social Link</span>
+        </div>
+        <div class="space-y-3">
+          <input id="facebook-group-url" type="text" placeholder="VD: https://www.facebook.com/groups/tennhom"
+            class="w-full bg-surface-container-highest border-2 border-surface-container-highest focus:border-primary-container rounded-lg px-4 py-3 text-sm"/>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="AdminApp.saveFacebookGroupUrl()"
+              class="px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-bold">
+              Lưu link
+            </button>
+            <button onclick="AdminApp.clearFacebookGroupUrl()"
+              class="px-4 py-3 rounded-lg bg-surface-container-high text-on-surface font-bold">
+              Xóa link
+            </button>
           </div>
         </div>
-      </div>
-    </div>
+        <p id="facebook-group-status" class="text-xs text-on-surface-variant mt-3"></p>
+      </section>
 
-    <!-- Recent Orders -->
-    <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
-      <div class="px-6 py-4 border-b border-surface-container-highest/20 flex justify-between items-center">
-        <h3 class="font-headline font-bold">Đơn hàng gần đây</h3>
-        <a href="history.html" class="text-xs text-primary font-bold hover:underline">Xem tất cả →</a>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="bg-surface-container-high/50 text-on-surface-variant text-xs uppercase tracking-wider font-label">
-              <th class="px-6 py-4 font-semibold">ID</th>
-              <th class="px-6 py-4 font-semibold">Gói</th>
-              <th class="px-6 py-4 font-semibold">Ref</th>
-              <th class="px-6 py-4 font-semibold">Thời gian</th>
-              <th class="px-6 py-4 font-semibold">Trạng thái</th>
-              <th class="px-6 py-4 font-semibold">Hỗ trợ</th>
+      <section class="bg-surface-container-low rounded-xl p-5 md:p-6">
+        <div class="flex items-start justify-between gap-3 mb-5">
+          <div>
+            <h2 class="text-xl font-headline font-black tracking-tight">Phân tích tài khoản truy cập hằng ngày</h2>
+            <p class="text-sm text-on-surface-variant mt-1">Số tài khoản duy nhất truy cập trong 14 ngày gần nhất.</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-on-surface-variant">Hôm nay</p>
+            <p id="today-access-count" class="text-2xl font-headline font-black">0</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-surface-container-high/60 text-xs uppercase tracking-wider text-on-surface-variant">
+                <th class="px-4 py-3">Ngày</th>
+                <th class="px-4 py-3">Số tài khoản</th>
+                <th class="px-4 py-3">Danh sách tài khoản</th>
+              </tr>
+            </thead>
+            <tbody id="daily-access-tbody" class="divide-y divide-surface-container-highest/30" data-skeleton data-skeleton-count="6" data-skeleton-min-ms="650"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/facebook-group.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const AdminApp = {
+      async authenticate() {
+        const currentUsername = Auth.getUsername();
+        if (!currentUsername || currentUsername !== CONFIG.ADMIN_USERNAME) {
+          Utils.toast('Bạn không có quyền truy cập trang này', 'error');
+          return;
+        }
+
+        const pw = document.getElementById('admin-password')?.value || '';
+        const hash = await Auth._hash(pw);
+        if (hash !== CONFIG.ADMIN_PASSWORD_HASH) {
+          Utils.toast('Sai mật khẩu admin', 'error');
+          return;
+        }
+
+        localStorage.setItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH, 'true');
+        this._showDashboard();
+      },
+
+      logout() {
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH);
+        location.reload();
+      },
+
+      init() {
+        const currentUsername = Auth.getUsername();
+        const authed = localStorage.getItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH) === 'true';
+        if (authed && currentUsername === CONFIG.ADMIN_USERNAME) {
+          this._showDashboard();
+        }
+      },
+
+      async _showDashboard() {
+        document.getElementById('auth-gate')?.classList.add('hidden');
+        document.getElementById('dashboard')?.classList.remove('hidden');
+        await this.loadClaimCode();
+        await this.loadAnnouncementSettings();
+        await this.loadFacebookGroupUrl();
+        this.refreshAnalytics();
+      },
+
+      async loadClaimCode() {
+        try {
+          const code = await DB.getClaimCode();
+          const input = document.getElementById('claim-code-input');
+          const status = document.getElementById('claim-code-status');
+          if (input) input.value = code;
+          if (status) {
+            status.textContent = code
+              ? 'Mã nhận đang bật. Người dùng phải nhập đúng mã để nhận gói.'
+              : 'Mã nhận đang tắt. Người dùng có thể nhận gói không cần mã.';
+          }
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể tải mã nhận từ Supabase', 'error');
+        }
+      },
+
+      async saveClaimCode() {
+        try {
+          const input = document.getElementById('claim-code-input');
+          const code = input?.value?.trim() || '';
+          await DB.setClaimCode(code);
+          await this.loadClaimCode();
+          Utils.toast(code ? 'Đã lưu mã nhận mới' : 'Đã lưu trạng thái không dùng mã', 'success');
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể lưu mã nhận', 'error');
+        }
+      },
+
+      async clearClaimCode() {
+        try {
+          await DB.setClaimCode('');
+          await this.loadClaimCode();
+          Utils.toast('Đã tắt yêu cầu mã nhận', 'success');
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể xóa mã nhận', 'error');
+        }
+      },
+
+      async loadAnnouncementSettings() {
+        try {
+          const settings = await DB.getAnnouncementSettings();
+          const enabledEl = document.getElementById('announcement-enabled');
+          const contentEl = document.getElementById('announcement-content');
+          const statusEl = document.getElementById('announcement-status');
+
+          if (enabledEl) enabledEl.checked = settings.enabled;
+          if (contentEl) contentEl.value = settings.content;
+          if (statusEl) {
+            statusEl.textContent = settings.enabled
+              ? 'Popup thông báo đang bật.'
+              : 'Popup thông báo đang tắt.';
+          }
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể tải cài đặt popup thông báo', 'error');
+        }
+      },
+
+      async saveAnnouncementSettings() {
+        try {
+          const enabledEl = document.getElementById('announcement-enabled');
+          const contentEl = document.getElementById('announcement-content');
+          const enabled = !!enabledEl?.checked;
+          const content = contentEl?.value?.trim() || '';
+
+          await DB.setAnnouncementSettings({ enabled, content });
+          await this.loadAnnouncementSettings();
+          Utils.toast('Đã lưu cài đặt popup thông báo', 'success');
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể lưu cài đặt popup thông báo', 'error');
+        }
+      },
+
+      async clearAnnouncementSettings() {
+        try {
+          await DB.setAnnouncementSettings({ enabled: false, content: '' });
+          await this.loadAnnouncementSettings();
+          Utils.toast('Đã tắt popup và xóa nội dung thông báo', 'success');
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể xóa cài đặt popup thông báo', 'error');
+        }
+      },
+
+      async loadFacebookGroupUrl() {
+        try {
+          const url = await DB.getFacebookGroupUrl();
+          const input = document.getElementById('facebook-group-url');
+          const status = document.getElementById('facebook-group-status');
+          if (input) input.value = url;
+          if (status) {
+            status.textContent = url
+              ? `Link hiện tại: ${url}`
+              : 'Chưa cài link Nhóm Facebook. Nút sẽ bị ẩn ở trang chủ.';
+          }
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể tải link Nhóm Facebook', 'error');
+        }
+      },
+
+      async saveFacebookGroupUrl() {
+        try {
+          const input = document.getElementById('facebook-group-url');
+          const raw = input?.value?.trim() || '';
+          const validation = FacebookGroup.validateUrl(raw);
+          if (!validation.ok) {
+            Utils.toast(validation.error, 'warning');
+            input?.focus();
+            return;
+          }
+
+          await DB.setFacebookGroupUrl(validation.normalizedUrl);
+          await this.loadFacebookGroupUrl();
+          Utils.toast('Đã lưu link Nhóm Facebook', 'success');
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể lưu link Nhóm Facebook', 'error');
+        }
+      },
+
+      async clearFacebookGroupUrl() {
+        try {
+          await DB.setFacebookGroupUrl('');
+          await this.loadFacebookGroupUrl();
+          Utils.toast('Đã xóa link Nhóm Facebook', 'success');
+        } catch (err) {
+          Utils.toast(err.message || 'Không thể xóa link Nhóm Facebook', 'error');
+        }
+      },
+
+      refreshAnalytics() {
+        const rows = DB.getDailyAccessStats(14);
+        const todayCount = rows[0]?.count || 0;
+        const tbody = document.getElementById('daily-access-tbody');
+        const todayEl = document.getElementById('today-access-count');
+
+        if (todayEl) todayEl.textContent = String(todayCount);
+        if (!tbody) return;
+
+        tbody.innerHTML = rows.map((row) => {
+          const usersText = row.users.length > 0
+            ? row.users.map((u) => Utils.escapeHtml(u)).join(', ')
+            : 'Chưa có';
+          return `
+            <tr class="hover:bg-surface-container-high/20 transition-colors">
+              <td class="px-4 py-3 text-sm font-semibold">${row.label}</td>
+              <td class="px-4 py-3 text-sm font-bold">${row.count}</td>
+              <td class="px-4 py-3 text-sm text-on-surface-variant">${usersText}</td>
             </tr>
-          </thead>
-          <tbody id="admin-orders-tbody" class="divide-y divide-surface-container-highest/30">
-            <!-- Dynamic -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+          `;
+        }).join('');
+      },
+    };
 
-    <!-- Support Logs -->
-    <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-2xl mt-8">
-      <div class="px-6 py-4 border-b border-surface-container-highest/20">
-        <h3 class="font-headline font-bold">Log hỗ trợ gần đây</h3>
-      </div>
-      <div class="p-6 space-y-3 max-h-96 overflow-y-auto" id="support-logs-area">
-        <!-- Dynamic -->
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- Scripts -->
-<script src="js/config.js"></script>
-<script src="js/supabase.js"></script>
-<script src="js/db.js"></script>
-<script src="js/api.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/auth.js"></script>
-<script>
-const AdminApp = {
-  async authenticate() {
-    // ── Kiểm tra username trước ──
-    const currentUsername = Auth.getUsername();
-    if (!currentUsername || currentUsername !== CONFIG.ADMIN_USERNAME) {
-      Utils.toast('Bạn không có quyền truy cập trang này', 'error');
-      return;
-    }
-
-    const pw = document.getElementById('admin-password').value;
-    const hash = await Auth._hash(pw);
-    if (hash === CONFIG.ADMIN_PASSWORD_HASH) {
-      localStorage.setItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH, 'true');
-      document.getElementById('auth-gate').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      this.refresh();
-    } else {
-      Utils.toast('Sai mật khẩu', 'error');
-    }
-  },
-
-  logout() {
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH);
-    location.reload();
-  },
-
-  init() {
-    const currentUsername = Auth.getUsername();
-    if (localStorage.getItem(CONFIG.STORAGE_KEYS.ADMIN_AUTH) === 'true') {
-      // Bảo mật thêm: Phải đúng username admin mới giữ session
-      if (currentUsername === CONFIG.ADMIN_USERNAME) {
-        document.getElementById('auth-gate').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-        this.refresh();
-      } else {
-        this.logout();
-      }
-    }
-  },
-
-  async refresh() {
-    const stats = await DB.getStats();
-    const revenueData = await DB.getRevenueByDay(7);
-
-    // Stat cards
-    document.getElementById('stat-cards').innerHTML = `
-      <div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-primary-container">
-        <p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-1">Doanh thu tháng</p>
-        <p class="text-2xl font-headline font-bold">${Utils.formatVND(stats.monthRevenue)}</p>
-        <p class="text-xs text-on-surface-variant mt-1">${stats.monthOrders} đơn</p>
-      </div>
-      <div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-tertiary-container">
-        <p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-1">Doanh thu tuần</p>
-        <p class="text-2xl font-headline font-bold">${Utils.formatVND(stats.weekRevenue)}</p>
-        <p class="text-xs text-on-surface-variant mt-1">${stats.weekOrders} đơn</p>
-      </div>
-      <div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-green-500">
-        <p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-1">Hôm nay</p>
-        <p class="text-2xl font-headline font-bold text-green-400">${Utils.formatVND(stats.todayRevenue)}</p>
-        <p class="text-xs text-on-surface-variant mt-1">${stats.todayOrders} đơn</p>
-      </div>
-      <div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-yellow-500">
-        <p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-1">Tổng đơn</p>
-        <p class="text-2xl font-headline font-bold">${stats.total}</p>
-        <p class="text-xs text-on-surface-variant mt-1">${stats.pending} chờ xử lý</p>
-      </div>
-    `;
-
-    // Revenue chart
-    const maxRev = Math.max(...revenueData.map(d => d.revenue), 1);
-    document.getElementById('chart-total-label').textContent = `Tổng: ${Utils.formatVND(stats.weekRevenue)}`;
-    document.getElementById('revenue-chart').innerHTML = revenueData.map(d => `
-      <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-        <div class="chart-bar w-full" style="height: ${Math.max((d.revenue / maxRev) * 100, 4)}%"
-          data-value="${d.count > 0 ? Utils.formatVND(d.revenue) : '0đ'}"></div>
-        <span class="text-[10px] text-on-surface-variant">${d.label}</span>
-      </div>
-    `).join('');
-
-    // Package distribution
-    const totalOrders = stats.mobileOrders + stats.tvOrders || 1;
-    document.getElementById('package-distribution').innerHTML = `
-      <div>
-        <div class="flex justify-between text-sm mb-1">
-          <span>📱 Mobile/PC</span>
-          <span class="font-bold">${stats.mobileOrders}</span>
-        </div>
-        <div class="w-full bg-surface-container-highest rounded-full h-2">
-          <div class="bg-primary-container rounded-full h-2 transition-all" style="width: ${(stats.mobileOrders / totalOrders * 100)}%"></div>
-        </div>
-      </div>
-      <div>
-        <div class="flex justify-between text-sm mb-1">
-          <span>📺 TV</span>
-          <span class="font-bold">${stats.tvOrders}</span>
-        </div>
-        <div class="w-full bg-surface-container-highest rounded-full h-2">
-          <div class="bg-tertiary-container rounded-full h-2 transition-all" style="width: ${(stats.tvOrders / totalOrders * 100)}%"></div>
-        </div>
-      </div>
-    `;
-
-    // Rates
-    document.getElementById('rates-section').innerHTML = `
-      <div class="flex justify-between text-sm">
-        <span class="text-on-surface-variant">Tỷ lệ thành công</span>
-        <span class="font-bold text-green-400">${stats.successRate}%</span>
-      </div>
-      <div class="flex justify-between text-sm">
-        <span class="text-on-surface-variant">Tỷ lệ khiếu nại</span>
-        <span class="font-bold text-yellow-400">${stats.supportRate}%</span>
-      </div>
-    `;
-
-    // Recent orders
-    const orders = (await DB.getAllOrders()).slice(0, 15);
-    document.getElementById('admin-orders-tbody').innerHTML = orders.length === 0
-      ? '<tr><td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">Chưa có đơn hàng</td></tr>'
-      : orders.map(o => `
-        <tr class="hover:bg-surface-container-high/30 transition-colors">
-          <td class="px-6 py-4 font-headline font-bold text-primary text-sm italic">${o.id}</td>
-          <td class="px-6 py-4 text-sm">${Utils.packageLabel(o.type)}</td>
-          <td class="px-6 py-4 text-xs font-mono text-on-surface-variant">${o.paymentRef}</td>
-          <td class="px-6 py-4 text-sm text-on-surface-variant">${Utils.formatDate(o.createdAt)}</td>
-          <td class="px-6 py-4">${Utils.statusBadge(o.status)}</td>
-          <td class="px-6 py-4 text-sm"><span class="text-zinc-600">—</span></td>
-        </tr>
-      `).join('');
-
-    // Support logs
-    const allLogs = await Supabase.query('support_logs', { order: 'created_at.desc', limit: '20' }) || [];
-
-    document.getElementById('support-logs-area').innerHTML = allLogs.length === 0
-      ? '<p class="text-on-surface-variant text-sm text-center py-4">Chưa có log hỗ trợ</p>'
-      : allLogs.map(log => `
-        <div class="flex items-start gap-3 bg-surface-container/50 p-3 rounded-lg">
-          <span class="material-symbols-outlined text-sm mt-0.5 ${log.result === 'SUCCESS' || log.result === 'LIVE' || log.result === 'NEW_LINK' ? 'text-green-400' : 'text-red-400'}">
-            ${log.result === 'SUCCESS' || log.result === 'LIVE' || log.result === 'NEW_LINK' ? 'check_circle' : 'error'}
-          </span>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 text-xs text-on-surface-variant">
-              <span class="font-mono font-bold text-primary">${log.order_id}</span>
-              <span>•</span>
-              <span>${Utils.formatDate(log.created_at)}</span>
-            </div>
-            <p class="text-sm text-on-surface mt-0.5">${log.action}: <span class="font-bold">${log.result}</span></p>
-            ${log.details ? `<p class="text-xs text-on-surface-variant truncate">${log.details}</p>` : ''}
-          </div>
-        </div>
-      `).join('');
-  },
-};
-
-AdminApp.init();
-</script>
+    AdminApp.init();
+  </script>
 </body>
 </html>

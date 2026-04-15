@@ -21,3 +21,4 @@ desktop.ini
 # Build output
 dist/
 build/
+backups/

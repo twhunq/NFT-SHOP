@@ -5,28 +5,162 @@
  * ============================================
  */
 
-const Payment = {
+const Claim = {
   _isProcessing: false,  // Chống double-click
+  _claimCodeResolver: null,
+  _currentRequiredClaimCode: '',
+  _previousBodyOverflow: '',
 
-  // ── Generate VietQR URL ──────────────────
-  generateQRUrl(amount, reference) {
-    const { BANK_ID, ACCOUNT_NUMBER, TEMPLATE } = CONFIG.MBBANK;
-    const desc = encodeURIComponent(reference);
-    return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NUMBER}-${TEMPLATE}.png?amount=${amount}&addInfo=${desc}&accountName=${encodeURIComponent(CONFIG.MBBANK.ACCOUNT_NAME)}`;
+  _ensureClaimCodeModal() {
+    let modal = document.getElementById('claim-code-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'claim-code-modal';
+    modal.className = 'claim-code-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = `
+      <div class="claim-code-modal__overlay" data-action="overlay"></div>
+      <div class="claim-code-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="claim-code-title">
+        <div class="claim-code-modal__header">
+          <div class="claim-code-modal__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">key</span>
+          </div>
+          <h3 class="claim-code-modal__title" id="claim-code-title">Nhập mã nhận</h3>
+        </div>
+        <p class="claim-code-modal__desc">Vui lòng nhập mã nhận để tiếp tục nhận gói của bạn.</p>
+        <input id="claim-code-modal-input" class="claim-code-modal__input" type="text" maxlength="40" placeholder="VD: VIP2026" autocomplete="off" />
+        <p id="claim-code-modal-error" class="claim-code-modal__error"></p>
+        <div class="claim-code-modal__actions">
+          <button type="button" class="claim-code-modal__btn claim-code-modal__btn--secondary" data-action="cancel">Hủy</button>
+          <button type="button" class="claim-code-modal__btn claim-code-modal__btn--primary" data-action="submit">Xác nhận</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', (event) => {
+      const action = event.target?.dataset?.action;
+      if (action === 'overlay' || action === 'cancel') {
+        this._resolveClaimCode(null);
+      }
+      if (action === 'submit') {
+        this._submitClaimCodeFromModal();
+      }
+    });
+
+    modal.addEventListener('keydown', (event) => {
+      if (event.isComposing) return;
+      if (event.key === 'Escape') {
+        this._resolveClaimCode(null);
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        this._submitClaimCodeFromModal();
+      }
+    });
+
+    const inputEl = modal.querySelector('#claim-code-modal-input');
+    inputEl?.addEventListener('input', () => {
+      inputEl.value = inputEl.value.toUpperCase();
+      this._showClaimCodeError('');
+    });
+    inputEl?.addEventListener('keydown', (event) => {
+      event.stopPropagation();
+    });
+
+    return modal;
   },
 
+  _showClaimCodeError(message) {
+    const errorEl = document.getElementById('claim-code-modal-error');
+    if (errorEl) errorEl.textContent = message || '';
+  },
+
+  _submitClaimCodeFromModal() {
+    const input = document.getElementById('claim-code-modal-input');
+    const value = (input?.value || '').trim().toUpperCase();
+    if (!value) {
+      this._showClaimCodeError('Vui lòng nhập mã nhận.');
+      input?.focus();
+      return;
+    }
+    if (this._currentRequiredClaimCode && value !== this._currentRequiredClaimCode) {
+      this._showClaimCodeError('Mã nhận không đúng. Vui lòng thử lại.');
+      input?.focus();
+      input?.select();
+      return;
+    }
+    if (input) input.value = value;
+    this._showClaimCodeError('');
+    this._resolveClaimCode(value);
+  },
+
+  _openClaimCodeModal(requiredClaimCode = '') {
+    const modal = this._ensureClaimCodeModal();
+    const input = document.getElementById('claim-code-modal-input');
+    this._currentRequiredClaimCode = requiredClaimCode || '';
+    this._showClaimCodeError('');
+
+    if (input) input.value = '';
+    modal.setAttribute('aria-hidden', 'false');
+    this._previousBodyOverflow = document.body.style.overflow || '';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => modal.classList.add('claim-code-modal--open'));
+
+    setTimeout(() => {
+      input?.focus();
+      input?.select();
+    }, 50);
+
+    return new Promise((resolve) => {
+      this._claimCodeResolver = resolve;
+    });
+  },
+
+  _resolveClaimCode(value) {
+    const modal = document.getElementById('claim-code-modal');
+    if (modal) {
+      modal.classList.remove('claim-code-modal--open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    document.body.style.overflow = this._previousBodyOverflow;
+
+    const resolver = this._claimCodeResolver;
+    this._claimCodeResolver = null;
+    this._currentRequiredClaimCode = '';
+    if (resolver) {
+      setTimeout(() => resolver(value), 300);
+    }
+  },
+
+  // Removed generateQRUrl for free model
+
   // ── Create payment order + show modal ────
-  async startPayment(type) {
+  async startClaim(type) {
     // Chống double-click tạo nhiều đơn
     if (this._isProcessing) return null;
     this._isProcessing = true;
 
     try {
+      const requiredClaimCode = await DB.getClaimCode();
+      if (requiredClaimCode) {
+        const userCode = await this._openClaimCodeModal(requiredClaimCode);
+        if (userCode === null) {
+          throw new Error('Bạn đã hủy nhập mã nhận');
+        }
+      }
+
+      const allowed = await DB.checkDailyLimit();
+      if (!allowed) {
+        throw new Error('Bạn đã nhận hết số lượt hôm nay. Vui lòng quay lại vào ngày mai!');
+      }
+
       // Create order in DB (now async)
       const order = await DB.createOrder({ type, status: 'pending' });
 
       // Show payment modal with auto-check
-      this._showPaymentModal(order);
+      this._showClaimModal(order);
 
       return order;
     } finally {
@@ -36,234 +170,58 @@ const Payment = {
   },
 
   // ── Render Payment Modal Content ─────────
-  _showPaymentModal(order) {
-    const qrUrl = this.generateQRUrl(order.amount, order.paymentRef);
-    const expiresAt = Date.now() + CONFIG.PAYMENT_TIMEOUT_MS;
-
-    const modal = document.getElementById('payment-modal');
-    const content = document.getElementById('payment-modal-content');
+  _showClaimModal(order) {
+    const modal = document.getElementById('claim-modal');
+    const content = document.getElementById('claim-modal-content');
 
     content.innerHTML = `
       <div class="modal-header">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary-container">payments</span>
+            <span class="material-symbols-outlined text-primary-container">download</span>
           </div>
           <div>
-            <h3 class="text-xl font-black font-headline tracking-tight text-on-surface">Thanh toán đơn hàng</h3>
+            <h3 class="text-xl font-black font-headline tracking-tight text-on-surface">Đang xử lý tài khoản...</h3>
             <p class="text-xs text-on-surface-variant">${Utils.packageLabel(order.type)} • ${order.id}</p>
           </div>
         </div>
-        <button onclick="Payment._cancelPayment('${order.id}')" class="text-on-surface-variant hover:text-on-surface transition-colors">
+        <button onclick="Claim._cancelClaim('${order.id}')" class="text-on-surface-variant hover:text-on-surface transition-colors hidden">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
-      <div class="modal-body space-y-6">
-        <!-- QR Code -->
-        <div class="flex justify-center">
-          <div class="inline-block bg-white rounded-2xl shadow-2xl p-2 pb-0 mb-2">
-            <div class="w-[240px] aspect-square overflow-hidden relative bg-white rounded-xl">
-              <img src="${qrUrl}" alt="QR Code" class="w-full h-auto absolute top-0 left-0" id="qr-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22224%22 height=%22224%22><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 font-size=%2214%22>QR Error</text></svg>'"/>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Info -->
-        <div class="bg-surface-container rounded-xl p-4 space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-on-surface-variant">Ngân hàng</span>
-            <span class="font-bold text-on-surface">MBBank</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-on-surface-variant">Số tài khoản</span>
-            <div class="flex items-center gap-2">
-              <span class="font-bold font-mono text-on-surface">${CONFIG.MBBANK.ACCOUNT_NUMBER}</span>
-              <button onclick="Utils.copyToClipboard('${CONFIG.MBBANK.ACCOUNT_NUMBER}')" class="text-primary-container hover:opacity-80">
-                <span class="material-symbols-outlined text-sm">content_copy</span>
-              </button>
-            </div>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-on-surface-variant">Chủ tài khoản</span>
-            <span class="font-bold text-on-surface">${CONFIG.MBBANK.ACCOUNT_NAME}</span>
-          </div>
-          <div class="border-t border-outline-variant/10 pt-3 flex justify-between items-center">
-            <span class="text-sm text-on-surface-variant">Số tiền</span>
-            <span class="text-2xl font-black text-primary font-headline">${Utils.formatVND(order.amount)}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-on-surface-variant">Nội dung CK</span>
-            <div class="flex items-center gap-2">
-              <code class="text-primary-container font-bold bg-primary-container/10 px-2 py-1 rounded">${order.paymentRef}</code>
-              <button onclick="Utils.copyToClipboard('${order.paymentRef}')" class="text-primary-container hover:opacity-80">
-                <span class="material-symbols-outlined text-sm">content_copy</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Auto-Check Status -->
-        <div id="autocheck-status" class="autocheck-status autocheck-waiting">
-          <div class="autocheck-icon">
-            <div class="autocheck-spinner"></div>
-          </div>
-          <div class="autocheck-text">
-            <p class="autocheck-title">Đang chờ thanh toán...</p>
-            <p class="autocheck-subtitle">Hệ thống tự động kiểm tra mỗi 5 giây</p>
-          </div>
-        </div>
-
-        <!-- Timer -->
-        <div class="text-center">
-          <p class="text-xs text-on-surface-variant mb-1">Đơn hàng hết hạn sau</p>
-          <span id="payment-timer" class="text-2xl font-mono font-bold text-primary"></span>
-        </div>
-
-        <!-- Warning -->
-        <div class="bg-yellow-500/5 border border-yellow-500/20 rounded-lg p-3 flex items-start gap-2">
-          <span class="material-symbols-outlined text-yellow-400 text-sm mt-0.5">warning</span>
-          <p class="text-xs text-yellow-200/80">Vui lòng chuyển <strong>đúng số tiền</strong> và <strong>đúng nội dung</strong> để hệ thống xác nhận tự động.</p>
-        </div>
-
-        <!-- Manual Fallback Button (Always shown) -->
-        <div id="manual-confirm-area">
-          <div class="border-t border-outline-variant/10 pt-4">
-            <button id="btn-confirm-payment" 
-              onclick="Payment.confirmPayment('${order.id}')"
-              class="w-full py-3 bg-surface-container-highest text-on-surface rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface-bright transition-all">
-              <span class="material-symbols-outlined text-base">verified</span>
-              <span>Tôi đã thanh toán xong</span>
-            </button>
-          </div>
+      <div class="modal-body space-y-6 text-center">
+        <div class="py-8">
+            <div class="w-12 h-12 border-4 border-primary-container/20 border-t-primary-container rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="font-bold text-on-surface">Đang cấp tài khoản miễn phí</p>
+            <p class="text-sm text-on-surface-variant">Vui lòng chờ trong giây lát...</p>
         </div>
       </div>
     `;
 
-    Utils.showModal('payment-modal');
+    Utils.showModal('claim-modal');
 
-    // Start countdown
-    Utils.startCountdown('payment-timer', expiresAt, async () => {
-      AutoCheck.stopPolling();
-      // GUARD: Không ghi đè nếu đơn đã paid/completed
-      const currentOrder = await DB.getOrder(order.id);
-      if (currentOrder && (currentOrder.status === 'paid' || currentOrder.status === 'completed')) {
-        return; // Đơn đã thanh toán, không làm gì
-      }
-      await DB.updateOrder(order.id, { status: 'failed' });
-      Utils.hideModal('payment-modal');
-      Utils.toast('Đơn hàng đã hết hạn thanh toán', 'error');
-    });
-
-    // Start auto-check polling
-    AutoCheck.startPolling(order, {
-      onDetected: (order, result) => {
-        this._onPaymentDetected(order, result);
-      },
-      onTimeout: (order) => {
-        // Show manual button if auto-check times out
-        this._showManualFallback();
-        Utils.toast('Hết thời gian tự động kiểm tra. Hãy xác nhận thủ công.', 'warning');
-      },
-      onError: (err) => {
-        // Update status text on repeated errors
-        const subtitle = document.querySelector('.autocheck-subtitle');
-        if (subtitle && AutoCheck.getPollCount() > 5) {
-          subtitle.textContent = 'Đang thử lại kết nối...';
-        }
-      },
-    });
-
+    // Automatically trigger confirmation delivery
+    setTimeout(() => {
+      Claim.confirmClaim(order.id);
+    }, 1500);
   },
 
-  // ── Show manual fallback button ─────────
-  _showManualFallback() {
-    const area = document.getElementById('manual-confirm-area');
-    if (area) {
-      area.classList.remove('hidden');
-    }
+  // ── Cancel request and close modal ──────
+  _cancelClaim(orderId) {
+    Utils.hideModal('claim-modal');
   },
 
-  // ── Cancel payment and close modal ──────
-  _cancelPayment(orderId) {
-    AutoCheck.stopPolling();
-    Utils.stopCountdown();
-    Utils.hideModal('payment-modal');
-  },
-
-  // ── Auto-detected payment callback ──────
-  async _onPaymentDetected(order, result) {
-    // Update auto-check status to success
-    const statusEl = document.getElementById('autocheck-status');
-    if (statusEl) {
-      statusEl.className = 'autocheck-status autocheck-success';
-      statusEl.innerHTML = `
-        <div class="autocheck-icon">
-          <span class="material-symbols-outlined text-green-400 text-2xl">check_circle</span>
-        </div>
-        <div class="autocheck-text">
-          <p class="autocheck-title text-green-400">Đã nhận thanh toán!</p>
-          <p class="autocheck-subtitle">Đang chuẩn bị tài khoản Netflix...</p>
-        </div>
-      `;
-      // Tự động cuộn xuống nút tôi đã thanh toán xong
-      setTimeout(() => {
-        const btn = document.getElementById('btn-confirm-payment');
-        if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }, 100);
-    }
-
-    // Mark as paid in DB
-    await DB.updateOrder(order.id, {
-      status: 'paid',
-      paidAt: new Date().toISOString(),
-      transactionId: result.transactionId || '',
-      transactionDate: result.transactionDate || '',
-    });
-
-    // Yêu cầu của khách: Dừng ở đây, KHÔNG TỰ ĐỘNG CHUYỂN màn hình đơn hàng.
-    // Người dùng phải bấm vào nút "Tôi đã thanh toán xong" để lấy tài khoản.
-  },
-
-  // ── Confirm Payment (manual fallback) ───
-  async confirmPayment(orderId) {
-    const btn = document.getElementById('btn-confirm-payment');
-    Utils.setLoading(btn, true);
-
-    // Stop auto-check and countdown timer
-    AutoCheck.stopPolling();
-    Utils.stopCountdown();
-
+  // ── Confirm Delivery (free model skip MBBank) ───
+  async confirmClaim(orderId) {
     try {
       const order = await DB.getOrder(orderId);
       if (!order) throw new Error('Không tìm thấy đơn hàng');
 
-      // ── Verify payment via MB Bank API before delivering ──
-      const verifyRes = await fetch(`${CONFIG.API_BASE}${CONFIG.ENDPOINTS.MBBANK_CHECK}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          invoiceCode: order.paymentRef,
-          amount: order.amount,
-          content: order.paymentRef,
-        }),
+      await DB.updateOrder(orderId, {
+        status: 'paid',
+        paidAt: new Date().toISOString(),
       });
-
-      if (verifyRes.ok) {
-        const result = await verifyRes.json();
-        if (!result.paid) {
-          throw new Error('Hệ thống chưa tìm thấy giao dịch. Vui lòng đợi 1-2 phút sau khi chuyển khoản rồi thử lại.');
-        }
-        // Payment verified — proceed
-        await DB.updateOrder(orderId, {
-          status: 'paid',
-          paidAt: new Date().toISOString(),
-          transactionId: result.transactionId || '',
-          transactionDate: result.transactionDate || '',
-        });
-      } else {
-        throw new Error('Không thể xác minh thanh toán. Vui lòng thử lại sau.');
-      }
 
       if (order.type === 'mobile') {
         await this._deliverMobileLink(orderId);
@@ -271,7 +229,7 @@ const Payment = {
         await this._deliverTVSetup(orderId);
       }
     } catch (err) {
-      Utils.setLoading(btn, false);
+      Utils.hideModal('claim-modal');
       Utils.toast(err.message, 'error');
     }
   },
@@ -301,7 +259,7 @@ const Payment = {
       }
     } catch (err) {
       await DB.updateOrder(orderId, { status: 'failed' });
-      Utils.hideModal('payment-modal');
+      Utils.hideModal('claim-modal');
       Utils.toast('Lỗi: ' + err.message, 'error', 6000);
     }
   },
@@ -331,14 +289,14 @@ const Payment = {
       this._showTVCodeInput(orderId, data);
     } catch (err) {
       await DB.updateOrder(orderId, { status: 'failed' });
-      Utils.hideModal('payment-modal');
+      Utils.hideModal('claim-modal');
       Utils.toast('Lỗi: ' + err.message, 'error', 6000);
     }
   },
 
   // ── Show Success: Mobile/PC ──────────────
   async _showSuccessMobile(orderId, data) {
-    const content = document.getElementById('payment-modal-content');
+    const content = document.getElementById('claim-modal-content');
     const order = await DB.getOrder(orderId);
 
     content.innerHTML = `
@@ -352,7 +310,7 @@ const Payment = {
             <p class="text-xs text-on-surface-variant">${order.id} • Gói Mobile/PC</p>
           </div>
         </div>
-        <button onclick="Utils.hideModal('payment-modal')" class="text-on-surface-variant hover:text-on-surface transition-colors">
+        <button onclick="Utils.hideModal('claim-modal')" class="text-on-surface-variant hover:text-on-surface transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -376,7 +334,7 @@ const Payment = {
           <div class="flex justify-between"><span class="text-sm text-on-surface-variant">Email</span><span class="font-bold">${data.account?.email || 'N/A'}</span></div>
           <div class="flex justify-between"><span class="text-sm text-on-surface-variant">Gói cước</span><span class="font-bold">${data.account?.plan || 'Premium'}</span></div>
           <div class="flex justify-between"><span class="text-sm text-on-surface-variant">Quốc gia</span><span class="font-bold">${data.account?.country || 'N/A'}</span></div>
-          <div class="flex justify-between"><span class="text-sm text-on-surface-variant">Hạn sử dụng</span><span class="font-bold text-primary">${CONFIG.DURATION_DAYS} ngày</span></div>
+          <div class="flex justify-between"><span class="text-sm text-on-surface-variant">Hết hạn</span><span class="font-bold text-primary">${Utils.formatDate(new Date(Date.now() + CONFIG.DURATION_DAYS * 24 * 60 * 60 * 1000).toISOString())}</span></div>
         </div>
 
         <!-- Login Link -->
@@ -407,7 +365,7 @@ const Payment = {
         <!-- Note -->
         <div class="bg-tertiary-container/10 border border-tertiary/10 rounded-lg p-3 flex items-start gap-2">
           <span class="material-symbols-outlined text-tertiary text-sm mt-0.5">info</span>
-          <p class="text-xs text-tertiary/80">Link sẽ được lưu trong <strong>Lịch sử đơn hàng</strong>. Nếu link hết hạn, vào trang <strong>Khiếu nại</strong> để nhận link mới.</p>
+          <p class="text-xs text-tertiary/80">Link sẽ được lưu trong <strong>Lịch sử nhận tài khoản</strong>. Nếu link hết hạn, vui lòng truy cập Trang chủ để nhận lại hoàn toàn miễn phí.</p>
         </div>
       </div>
     `;
@@ -415,7 +373,7 @@ const Payment = {
 
   // ── Show TV Code Input ───────────────────
   async _showTVCodeInput(orderId, data) {
-    const content = document.getElementById('payment-modal-content');
+    const content = document.getElementById('claim-modal-content');
     const order = await DB.getOrder(orderId);
 
     content.innerHTML = `
@@ -429,7 +387,7 @@ const Payment = {
             <p class="text-xs text-on-surface-variant">${order.id} • Gói TV</p>
           </div>
         </div>
-        <button onclick="Utils.hideModal('payment-modal')" class="text-on-surface-variant hover:text-on-surface transition-colors">
+        <button onclick="Utils.hideModal('claim-modal')" class="text-on-surface-variant hover:text-on-surface transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -473,7 +431,7 @@ const Payment = {
 
         <!-- Submit Button -->
         <button id="btn-tv-login"
-          onclick="Payment.submitTVCode('${orderId}')"
+          onclick="Claim.submitTVCode('${orderId}')"
           class="w-full py-4 bg-primary-container text-on-primary-container rounded-lg font-black text-lg active:scale-[0.98] transition-all shadow-xl shadow-primary-container/20 flex items-center justify-center gap-2">
           <span class="material-symbols-outlined">tv</span>
           <span>Đăng nhập vào TV</span>
@@ -535,7 +493,7 @@ const Payment = {
 
   // ── Show Success: TV ─────────────────────
   async _showSuccessTV(orderId, result) {
-    const content = document.getElementById('payment-modal-content');
+    const content = document.getElementById('claim-modal-content');
     const order = await DB.getOrder(orderId);
 
     content.innerHTML = `
@@ -549,7 +507,7 @@ const Payment = {
             <p class="text-xs text-on-surface-variant">${order.id}</p>
           </div>
         </div>
-        <button onclick="Utils.hideModal('payment-modal')" class="text-on-surface-variant hover:text-on-surface transition-colors">
+        <button onclick="Utils.hideModal('claim-modal')" class="text-on-surface-variant hover:text-on-surface transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -575,10 +533,10 @@ const Payment = {
 
         <div class="bg-tertiary-container/10 border border-tertiary/10 rounded-lg p-3 flex items-start gap-2">
           <span class="material-symbols-outlined text-tertiary text-sm mt-0.5">info</span>
-          <p class="text-xs text-tertiary/80">Nếu TV bị đăng xuất, vào trang <strong>Khiếu nại</strong> và nhập mã đơn hàng <strong>${order.id}</strong> để đăng nhập lại (tối đa 3 lần/24h).</p>
+          <p class="text-xs text-tertiary/80">Nếu TV bị đăng xuất, vui lòng truy cập Trang chủ để nhận lại mã hoàn toàn miễn phí.</p>
         </div>
 
-        <button onclick="Utils.hideModal('payment-modal')"
+        <button onclick="Utils.hideModal('claim-modal')"
           class="w-full py-3 bg-surface-container-highest text-on-surface rounded-lg font-bold text-sm hover:bg-surface-bright transition-all">
           Đóng
         </button>

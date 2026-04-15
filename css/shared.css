@@ -558,3 +558,325 @@
   50% { border-color: rgba(96, 165, 250, 0.35); }
 }
 
+/* ── Claim Code Popup (BEM) ─────────────── */
+.claim-code-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.claim-code-modal--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.claim-code-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+}
+
+.claim-code-modal__dialog {
+  position: relative;
+  width: min(100%, 560px);
+  background: #1b1b1b;
+  color: #f6f6f6;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 24px;
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.claim-code-modal--open .claim-code-modal__dialog {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.claim-code-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.claim-code-modal__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(229, 9, 20, 0.15);
+  color: #ffb4aa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.claim-code-modal__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff7f6;
+}
+
+.claim-code-modal__desc {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #f2d5d1;
+}
+
+.claim-code-modal__input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #5e3f3b;
+  background: #131313 !important;
+  color: #ffffff !important;
+  caret-color: #ffffff;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.claim-code-modal__input:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.25);
+}
+
+.claim-code-modal__input::placeholder {
+  color: #b99792;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.claim-code-modal__error {
+  min-height: 20px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #ffb4ab;
+}
+
+.claim-code-modal__actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.claim-code-modal__btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.claim-code-modal__btn:hover {
+  transform: translateY(-1px);
+}
+
+.claim-code-modal__btn:active {
+  transform: translateY(0);
+}
+
+.claim-code-modal__btn--secondary {
+  background: #2a2a2a;
+  color: #f0d8d4;
+}
+
+.claim-code-modal__btn--secondary:hover {
+  background: #353535;
+}
+
+.claim-code-modal__btn--primary {
+  background: #e50914;
+  color: #fff7f6;
+}
+
+.claim-code-modal__btn--primary:hover {
+  background: #c6000c;
+}
+
+@media (max-width: 767px) {
+  .claim-code-modal {
+    padding: 12px;
+  }
+
+  .claim-code-modal__dialog {
+    width: 100%;
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  .claim-code-modal__actions {
+    justify-content: stretch;
+  }
+
+  .claim-code-modal__btn {
+    flex: 1;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .claim-code-modal__dialog {
+    width: min(100%, 520px);
+    border-radius: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .claim-code-modal__dialog {
+    width: min(100%, 560px);
+    border-radius: 12px;
+  }
+}
+
+/* ── Animation System Library ───────────── */
+:root {
+  --anim-duration-fast: 300ms;
+  --anim-duration-base: 400ms;
+  --anim-duration-slow: 500ms;
+  --anim-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.anim-page {
+  opacity: 0;
+  transition: opacity var(--anim-duration-base) var(--anim-ease-standard);
+}
+
+body.anim-page.anim-page--ready {
+  opacity: 1;
+}
+
+body.anim-page.anim-page--leaving {
+  opacity: 0;
+}
+
+.anim-hover-button,
+.anim-hover-card {
+  will-change: transform, opacity;
+  transition: transform var(--anim-duration-fast) ease,
+    box-shadow var(--anim-duration-fast) ease,
+    opacity var(--anim-duration-fast) ease;
+  transform: translateZ(0);
+}
+
+.anim-hover-button:hover {
+  transform: translate3d(0, -2px, 0);
+}
+
+.anim-hover-card:hover {
+  transform: translate3d(0, -4px, 0);
+}
+
+.anim-click-pop {
+  animation: anim-click-pop 220ms ease-out;
+}
+
+@keyframes anim-click-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+.anim-field {
+  transition: border-color var(--anim-duration-fast) ease, box-shadow var(--anim-duration-fast) ease;
+}
+
+.anim-field--invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+  animation: anim-field-shake 320ms ease;
+}
+
+.anim-field--valid {
+  border-color: #4ade80 !important;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.15) !important;
+}
+
+@keyframes anim-field-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+.anim-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  min-height: 24px;
+}
+
+.anim-skeleton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: anim-skeleton-shimmer 1.2s infinite;
+  will-change: transform;
+}
+
+@keyframes anim-skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.anim-skeleton-host {
+  position: relative;
+}
+
+.anim-skeleton-host__layer {
+  display: grid;
+  gap: 10px;
+}
+
+.anim-skeleton-host--loading > * {
+  visibility: hidden;
+}
+
+.anim-skeleton-host--loading .anim-skeleton-host__layer {
+  visibility: visible;
+}
+
+[data-parallax] {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.anim-page,
+  .anim-hover-button,
+  .anim-hover-card,
+  .anim-field,
+  [data-parallax],
+  .anim-skeleton::before,
+  .claim-code-modal,
+  .claim-code-modal__dialog {
+    animation: none !important;
+    transition-duration: 0ms !important;
+    transform: none !important;
+  }
+}

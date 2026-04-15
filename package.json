@@ -1,0 +1,19 @@
+{
+  "name": "mf-premium",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Secure production build pipeline for MF PREMIUM",
+  "type": "module",
+  "scripts": {
+    "backup:predeploy": "node scripts/predeploy-backup.mjs",
+    "build:prod": "node scripts/build-production.mjs",
+    "deploy:prepare": "npm run backup:predeploy && npm run build:prod",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "html-minifier-terser": "^7.2.0",
+    "javascript-obfuscator": "^4.1.1",
+    "terser": "^5.39.2"
+  }
+}

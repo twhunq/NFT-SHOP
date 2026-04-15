@@ -68,6 +68,32 @@ const DB = {
     return this._toFrontendOrder(result);
   },
 
+  // ── Thêm kiểm tra giới hạn nhận tài khoản/ngày ──
+  async checkDailyLimit() {
+    const username = Auth.getUsername();
+    if (!username) return true; // guest account or handle in Auth
+
+    // Count today's completed orders for this user
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+
+    const rows = await Supabase.query('orders', {
+      filters: `user_id=eq.${encodeURIComponent(username)}`,
+      order: 'created_at.desc',
+    });
+
+    if (!rows) return true;
+
+    let todayCount = 0;
+    for (const row of rows) {
+      if (new Date(row.created_at) >= new Date(today)) {
+        todayCount++;
+      }
+    }
+
+    return todayCount < CONFIG.DAILY_CLAIM_LIMIT;
+  },
+
   // ── Lookup by order_code (display ID like NFLX-ABC123) ──
   async getOrder(orderCode) {
     // Try order_code first (frontend display ID)
@@ -206,6 +232,136 @@ const DB = {
       refreshCount: order.refreshCount + 1,
       lastRefreshAt: new Date().toISOString(),
     });
+  },
+
+  // ── Admin Settings (Supabase) ───────────
+  async _getAppSettingText(key, fallback = '') {
+    try {
+      const row = await Supabase.getOne('app_settings', 'key', key, 'value_text');
+      return (row?.value_text ?? fallback).toString();
+    } catch (err) {
+      console.error(`[DB] get setting "${key}" ERROR:`, err);
+      return fallback;
+    }
+  },
+
+  async _setAppSettingText(key, valueText) {
+    const nowIso = new Date().toISOString();
+    const cleanValue = (valueText ?? '').toString();
+    const existing = await Supabase.getOne('app_settings', 'key', key, 'key');
+
+    if (existing) {
+      await Supabase.update('app_settings', 'key', key, {
+        value_text: cleanValue,
+        updated_at: nowIso,
+      });
+      return;
+    }
+
+    await Supabase.insert('app_settings', {
+      key,
+      value_text: cleanValue,
+      updated_at: nowIso,
+    });
+  },
+
+  async getClaimCode() {
+    const value = await this._getAppSettingText('claim_code', '');
+    return value.trim().toUpperCase();
+  },
+
+  async setClaimCode(code) {
+    const cleanCode = (code || '').trim().toUpperCase();
+    try {
+      await this._setAppSettingText('claim_code', cleanCode);
+      return cleanCode;
+    } catch (err) {
+      console.error('[DB] setClaimCode ERROR:', err);
+      throw new Error('Không thể lưu mã nhận lên Supabase. Vui lòng kiểm tra bảng app_settings.');
+    }
+  },
+
+  async getAnnouncementSettings() {
+    const enabledRaw = await this._getAppSettingText('announcement_enabled', 'false');
+    const content = await this._getAppSettingText('announcement_content', '');
+    return {
+      enabled: ['true', '1', 'yes', 'on'].includes(enabledRaw.trim().toLowerCase()),
+      content: content.trim(),
+    };
+  },
+
+  async setAnnouncementSettings({ enabled, content }) {
+    try {
+      await Promise.all([
+        this._setAppSettingText('announcement_enabled', enabled ? 'true' : 'false'),
+        this._setAppSettingText('announcement_content', (content || '').trim()),
+      ]);
+      return { enabled: !!enabled, content: (content || '').trim() };
+    } catch (err) {
+      console.error('[DB] setAnnouncementSettings ERROR:', err);
+      throw new Error('Không thể lưu cấu hình popup thông báo lên Supabase.');
+    }
+  },
+
+  async getFacebookGroupUrl() {
+    const value = await this._getAppSettingText('facebook_group_url', '');
+    return value.trim();
+  },
+
+  async setFacebookGroupUrl(url) {
+    const cleanUrl = (url || '').trim();
+    try {
+      await this._setAppSettingText('facebook_group_url', cleanUrl);
+      return cleanUrl;
+    } catch (err) {
+      console.error('[DB] setFacebookGroupUrl ERROR:', err);
+      throw new Error('Không thể lưu link Nhóm Facebook.');
+    }
+  },
+
+  // ── Daily Access Analytics (localStorage) ──
+  recordDailyAccess(username) {
+    if (!username) return;
+
+    const today = new Date().toISOString().split('T')[0];
+    let logMap = {};
+
+    try {
+      logMap = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.DAILY_ACCESS_LOG) || '{}');
+    } catch {
+      logMap = {};
+    }
+
+    const todayUsers = Array.isArray(logMap[today]) ? logMap[today] : [];
+    if (!todayUsers.includes(username)) {
+      todayUsers.push(username);
+      logMap[today] = todayUsers;
+      localStorage.setItem(CONFIG.STORAGE_KEYS.DAILY_ACCESS_LOG, JSON.stringify(logMap));
+    }
+  },
+
+  getDailyAccessStats(days = 14) {
+    let logMap = {};
+    try {
+      logMap = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.DAILY_ACCESS_LOG) || '{}');
+    } catch {
+      logMap = {};
+    }
+
+    const rows = [];
+    for (let i = 0; i < days; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateKey = date.toISOString().split('T')[0];
+      const users = Array.isArray(logMap[dateKey]) ? logMap[dateKey] : [];
+      rows.push({
+        date: dateKey,
+        label: `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`,
+        users,
+        count: users.length,
+      });
+    }
+    return rows;
   },
 
   // ── Analytics ────────────────────────────
