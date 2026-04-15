@@ -385,7 +385,14 @@
           const result = await Claim.startClaim(type);
         } catch (err) {
           console.error('[HomeApp] claimPackage ERROR:', err);
-          Utils.toast(err.message, 'error');
+          
+          // Custom override warning message for out of stock / failed claim 
+          const msg = err.message || '';
+          if (msg.includes('Không lấy được link') || msg.toLowerCase().includes('hết')) {
+             Utils.toast('Hệ thống đã hết hàng, vui lòng quay lại sau!', 'warning', 6000);
+          } else {
+             Utils.toast(err.message, 'error', 6000);
+          }
         } finally {
           setTimeout(() => { this._buying = false; }, 2000);
         }
