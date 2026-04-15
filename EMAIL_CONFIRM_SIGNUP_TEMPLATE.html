@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="vi" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Xác nhận đăng ký tài khoản</title>
+  <style>
+    /* Email-safe CSS (inline-ish, no modern layout dependencies) */
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100% !important;
+      height: 100% !important;
+      background: #f3f4f6;
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      color: #111827;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    table {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    img {
+      border: 0;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+      max-width: 100%;
+    }
+    a {
+      color: #dc2626;
+      text-decoration: none;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .brand {
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 700;
+      color: #dc2626;
+      letter-spacing: 0.2px;
+      margin: 0;
+    }
+    .h1 {
+      font-size: 28px;
+      line-height: 34px;
+      margin: 0 0 12px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .text {
+      font-size: 16px;
+      line-height: 24px;
+      color: #374151;
+      margin: 0 0 16px;
+    }
+    .btn {
+      display: inline-block;
+      background: #dc2626;
+      color: #ffffff !important;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 16px;
+      padding: 15px 24px;
+      border-radius: 10px;
+    }
+    .muted {
+      font-size: 13px;
+      line-height: 20px;
+      color: #6b7280;
+      margin: 0;
+    }
+    .hr {
+      border-top: 1px solid #e5e7eb;
+      margin: 24px 0;
+      height: 1px;
+      line-height: 1px;
+      font-size: 1px;
+    }
+    @media only screen and (max-width: 600px) {
+      .mobile-pad {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .h1 {
+        font-size: 24px !important;
+        line-height: 30px !important;
+      }
+      .text {
+        font-size: 15px !important;
+        line-height: 22px !important;
+      }
+      .btn {
+        display: block !important;
+        text-align: center !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f3f4f6">
+    <tr>
+      <td align="center" style="padding: 28px 12px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td style="padding: 0 8px 14px;" class="mobile-pad">
+              <p class="brand">NETFLIX PREMIUM</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="card">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding: 28px 32px 8px;" class="mobile-pad">
+                    <h1 class="h1">Xác nhận đăng ký tài khoản</h1>
+                    <p class="text">
+                      Cảm ơn bạn đã đăng ký. Vui lòng nhấn nút bên dưới để xác nhận email và hoàn tất kích hoạt tài khoản.
+                    </p>
+                    <p style="margin: 0 0 20px;">
+                      <a href="{{ .ConfirmationURL }}" class="btn" target="_blank" rel="noopener noreferrer">Xác nhận email</a>
+                    </p>
+                    <p class="muted">
+                      Nếu nút không hoạt động, bạn có thể sao chép liên kết này:
+                    </p>
+                    <p style="word-break: break-all; margin: 6px 0 0;">
+                      <a href="{{ .ConfirmationURL }}" style="font-size: 13px; line-height: 20px; color: #dc2626;">{{ .ConfirmationURL }}</a>
+                    </p>
+                    <div class="hr"></div>
+                    <p class="muted">
+                      Nếu bạn không thực hiện đăng ký, hãy bỏ qua email này.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 16px 8px 0;" class="mobile-pad">
+              <p class="muted">
+                Email được gửi tự động từ hệ thống. Vui lòng không trả lời trực tiếp email này.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
