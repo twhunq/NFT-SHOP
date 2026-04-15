@@ -27,7 +27,7 @@ const CONFIG = {
   },
 
   // Giới hạn nhận mỗi ngày
-  DAILY_CLAIM_LIMIT: 3,
+  DAILY_CLAIM_LIMIT: 5,
 
   // Pricing (miễn phí)
   PRICE: 0,
@@ -47,7 +47,7 @@ const CONFIG = {
   },
 
   // Admin
-  ADMIN_USERNAME: 'binkyz2000',
+  ADMIN_USERNAME: 'binkyz2006@gmail.com',
   ADMIN_PASSWORD_HASH: 'b34af70db5a97bd02d1ca4e176de5b5c11fb959797b29f896a8b84d766991838',  // SHA-256 of Beat123@
 
   // Order
