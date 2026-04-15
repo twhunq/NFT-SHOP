@@ -170,6 +170,12 @@ const Supabase = {
     throw new Error(message);
   },
 
+  async signInWithOAuth(provider, redirectTo = '') {
+    const finalRedirect = redirectTo || CONFIG.AUTH.REDIRECT_URI;
+    const url = `${CONFIG.SUPABASE.URL}/auth/v1/authorize?provider=${provider}&redirect_to=${encodeURIComponent(finalRedirect)}`;
+    window.location.href = url;
+  },
+
   async signUpWithPassword(email, password, redirectTo = '') {
     const finalRedirect = redirectTo || CONFIG.AUTH.REDIRECT_URI;
     const url = `${CONFIG.SUPABASE.URL}/auth/v1/signup`;
