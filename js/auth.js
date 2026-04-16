@@ -106,9 +106,10 @@ const Auth = {
   async _ensureUserByEmailProfile(profile) {
     const email = this._normalizeEmail(profile?.email);
     if (!email) throw new Error('Không lấy được email từ phiên đăng nhập');
-    const emailValidation = this._validateEmail(email);
-    if (!emailValidation.ok) {
-      throw new Error(emailValidation.error);
+
+    // Email từ OAuth provider (Google) đã được xác thực, chỉ cần kiểm tra domain
+    if (!email.endsWith('@gmail.com')) {
+      throw new Error('Chỉ cho phép đăng nhập bằng địa chỉ @gmail.com');
     }
 
     const legacyByEmail = await Supabase.getOne('users', 'email', email, 'username,display_name,balance,total_deposit,email');
