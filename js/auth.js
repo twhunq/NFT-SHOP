@@ -727,10 +727,8 @@ const Auth = {
     this._handleAuthRedirect()
       .then((result) => {
         if (result?.mode === 'login' && result.user) {
-          this.renderNavAuth('nav-auth');
-          this.renderMobileAuth('mobile-auth');
-          window.dispatchEvent(new CustomEvent('auth-changed', { detail: result.user }));
-          Utils.toast(`Xin chào, ${result.user.displayName}!`, 'success');
+          // Reload trang để giao diện cập nhật trạng thái đăng nhập
+          window.location.reload();
           return;
         }
 
@@ -742,6 +740,8 @@ const Auth = {
             this._cachedUser = currentUser;
             this.renderNavAuth('nav-auth');
             this.renderMobileAuth('mobile-auth');
+            window.dispatchEvent(new CustomEvent('auth-changed', { detail: currentUser }));
+            Utils.toast(`Xin chào, ${currentUser.displayName}!`, 'success');
           });
           return;
         }

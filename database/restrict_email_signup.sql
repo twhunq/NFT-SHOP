@@ -38,8 +38,8 @@ BEGIN
     RAISE EXCEPTION 'Chỉ cho phép đăng ký bằng địa chỉ @gmail.com';
   END IF;
 
-  -- 4) Gmail thuần: chỉ cho phép chữ và số trước @gmail.com
-  IF NOT (local_part ~ '^[a-z0-9]+$') THEN
+  -- 4) Gmail thuần: cho phép chữ, số và dấu chấm (period) trước @gmail.com
+  IF NOT (local_part ~ '^[a-z0-9.]+$') THEN
     RAISE LOG 'Blocked non-pure gmail local-part signup: %', normalized_email;
     RAISE EXCEPTION 'Email thuộc subdomain của Gmail không được phép đăng ký.';
   END IF;
